@@ -9,7 +9,6 @@ function Post() {
     return(
 
         <div>
-            Post page
             <PostComponent/>
         </div>
         

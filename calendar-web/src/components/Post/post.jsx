@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from "react"
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
+
 import "../assets/styles.css";
 import EmotionFace from "./EmotionFace";
 import  postLayer  from "../assets/post.svg";
+import textBox from "../assets/textBox.svg";
+import { ReactComponent as PostLayer } from "../assets/post.svg";
+import { ReactComponent as TextBox } from "../assets/textBox.svg";
+
+import backButton from "../assets/img/backButton.png"
 import  Sun  from "../assets/img/Sun.png";
 import  cloud  from "../assets/img/Cloud.png";
 import  Rain  from "../assets/img/Rain.png";
@@ -11,6 +18,8 @@ import  Rain  from "../assets/img/Rain.png";
 
 
 function Post({ post }) {
+
+  const currentDate = format(new Date(), "yyyy-MM-dd");  
 
   const [text, setText] = useState('');
   const [message, setMessage] = useState('');
@@ -58,11 +67,41 @@ function Post({ post }) {
   }, []);  // 빈 배열로 useEffect가 컴포넌트 마운트 시 한 번만 실행됨
 
   return (
-    <div>
-       <img src={postLayer} alt="postInput" />
+    <div className="container">
+      <div className="back">
+        <Link to="/calendar">
+          <img src={backButton} alt="backButton" className="back-img" />
+        </Link>
+      </div>
+  
+      <div className="post-and-textbox">
+        <PostLayer className="post-layer" />
+          <text className="svg-text">
+              {currentDate} {/* 여기에 날짜 텍스트 삽입 */}
+          </text>
+
+        <form onSubmit={handleSubmit} className="text-box-form">
+          {/* TextBox SVG 디자인 */}
+          <svg className="text-box-svg" xmlns="http://www.w3.org/2000/svg">
+            {/* 텍스트 입력 부분 */}
+            <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+          </svg>
+          <textarea
+            value={text}
+            onChange={handleChange}
+            className="text-input"
+            placeholder="텍스트를 입력하세요..."
+          />
+          
+          <button type="submit" className="submit-button">제출</button>
+        </form>
     </div>
+
+
+  </div>
   );
 }
 
 
 export default Post;
+

@@ -672,3 +672,87 @@ font-family: 'Poppins';
 
 
 /* Post */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative; /* 자식 요소의 절대 위치 설정을 위한 기준 */
+}
+
+.back {
+  height: 66px;
+  width: 68px;
+  background-color: #476161;
+  border-radius: 34px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+}
+
+.back .back-img {
+  position: absolute;
+  height: 50px;
+  width: 50px;
+  top: 10px;
+  left: 9px;
+}
+
+
+.post-and-textbox {
+  display: flex; /* 두 요소를 가로로 정렬 */
+  justify-content: space-between; /* 가운데 정렬 */
+  align-items: flex-start; /* 세로 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+}
+
+.post-layer {
+  height: 716px;
+  width: 620px;
+  margin-right: 20px; /* 두 요소 사이에 여백 추가 */
+  margin-top: 80px; /* 상단 여백을 통해 위치 조정 */
+  margin-left: 50px; /* 왼쪽 여백을 통해 위치 조정 */
+  overflow: visible;
+}
+
+.text-box-form {
+  width: 30%; /* 화면의 오른쪽 50%를 차지 */
+  height: 30%;
+  margin-top: 500px; /* 상단 여백 */
+  position: relative;
+  z-index: 1; /* 텍스트 입력창이 다른 요소 위에 보이도록 설정 */
+}
+
+.text-input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  width: 600px; /* 원하는 너비 */
+  height: 350px; /* 원하는 높이 */
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+
+.svg-text {
+  fill: #000;
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.96px;
+  position: absolute;
+  z-index: 10;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
+  top: 13%;
+  left: 8%;
+}
