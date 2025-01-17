@@ -1,0 +1,674 @@
+main {
+  background-color: #ffffff;
+  height: 1080px;
+  position: relative;
+  width: 1920px;
+}
+
+main .overlap {
+  display: flex;
+  flex-direction: row;  /* 세로로 배치 */
+  height: 100vh;  /* 부모 컨테이너의 전체 높이 */
+  position: relative;
+}
+
+main .div {
+  height: 100%;  /* 부모 컨테이너의 전체 높이 사용 */
+  flex: 2;  /* 유연한 너비 비율 설정 */
+  position: relative;
+  /* top: 0;
+  width: 1128px; */
+}
+
+main .group-wrapper{
+  background-color: #e3f5f5;
+  border-radius: 55px;
+  height: 110px;
+  left: 456px;
+  position: absolute;
+  top: 752px;
+  width: 110px;
+}
+
+main .img {
+  height: 96px;
+  left: 22px;
+  position: absolute;
+  top: 11px;
+  width: 63px;
+}
+
+main .img-wrapper {
+  background-color: #e3f5f5;
+  border-radius: 55px;
+  height: 110px;
+  left: 606px;
+  position: absolute;
+  top: 632px;
+  width: 110px;
+}
+
+main .rectangle {
+  background: linear-gradient(
+    180deg,
+    rgb(255, 255, 255) 81.57%,
+    rgb(243.65, 243.65, 243.65) 100%
+  );
+  height: 1080px;
+  left: 928px;
+  position: absolute;
+  top: 0;
+  width: 200px;
+}
+
+main .view {
+  height: 762px;
+  left: 0;
+  position: absolute;
+  top: 254px;
+  width: 1008px;
+}
+
+
+
+
+main .text-wrapper-2{
+  color: #3F6262;
+  font-family: "Pretendard-Bold", Helvetica;
+  font-size: 34px;
+  font-weight: 700;
+  left: 45px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 31px;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 50px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.calendar-date-instance {
+  flex: 0 0 auto !important;
+  gap: 17.87px !important;
+}
+
+.design-component-instance-node {
+  display: flex;
+  top: 20px;
+  justify-content: center; 
+  align-items: center;
+  background-color: #FADF9E;
+  border-radius: 53.6px;
+  height: 107.2px;
+  width: 107.2px;
+}
+
+.navbar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 50px;
+}
+
+main.element {
+  font-family: "Pretendard-Bold", Helvetica;
+  font-size: 34px;
+  font-weight: 700;
+  left: 42px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 31px;
+}
+
+main .text-wrapper {
+  font-family: "Pretendard-SemiBold", Helvetica;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
+  margin: 0;
+  position: static; /* 상대적 위치 제거 */
+  width: auto;
+}
+
+/* Calendar Header*/
+.header-wrapper {
+  display: flex;
+  flex-direction: column;  /* 세로 방향으로 정렬 */
+  align-items: center;  /* 수평 중앙 정렬 */
+  justify-content: flex-start;  /* 수직 중앙 정렬 */
+  height: 100vh;  /* 화면 전체 높이 사용 */
+}
+
+/* 날짜 텍스트 */
+.text-wrapper-5 {
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  margin-bottom: 10px;  /* 텍스트와 다른 요소들 간의 간격 */
+}
+
+/* 월/연도 텍스트 */
+.text-wrapper-6 {
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-bottom: 15px;  /* 다른 요소들 간의 간격 */
+}
+
+/* 왼쪽 화살표 */
+.polygon {
+  height: 31px;
+  width: 24px;
+}
+
+/* 오른쪽 화살표 */
+.polygon-2 {
+  height: 31px;
+  width: 24px;
+}
+
+/* link-wrapper 부모 요소 (pictorysmall, misc 이미지 포함) */
+.link-wrapper {
+  display: flex;  /* Flexbox 사용 */
+  align-items: flex-start;  /*center*/  
+  justify-content: space-between;  /* 좌우로 배치 */
+  width: 100%;  /* 부모의 전체 너비 사용 */
+  max-width: 1000px;  /* 화면 크기에 맞게 제한 */
+  padding: 0 10px;  /* 좌우 여백을 추가 */
+  order: -1;
+  margin-bottom: 30px;  /* text-wrapper와의 간격을 넓히기 */
+}
+
+/* pictorysmall 이미지 */
+.group-2 {
+  height: 59px;
+  width: 235px;
+  margin-left: -50px;
+}
+
+/* misc 이미지 */
+.misc {
+  height: 51px;
+  width: 51px;
+  object-fit: contain;  /* 이미지 비율 유지 */
+  /*margin-right: -100px;*/
+}
+
+.calendar {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #f4f4f4;
+}
+
+.calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 10px;
+}
+
+.calendar-day {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.calendar-day.today {
+  background: #ffeeba;
+}
+
+.event {
+  background: #007bff;
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.calendar-body {
+  font-family: Pretendard Regular;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  background-color: white;
+}
+.container {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  border-radius: 10px;
+}
+.calendar-header h1 {
+  font-size: 24px;
+  color: #ffcc33;
+}
+.calendar-grid {
+  gap: 80px;
+  margin-top: 60px;
+  margin-left: -60px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  justify-content: center;
+}
+.calendar-date {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #3F6262;
+  font-weight: bold;
+  font-family: Pretendard Regular;  
+  font-size: 28px; 
+}
+.list {
+  width: 100%;
+  padding: 20px;
+  max-width: 1000px;
+  flex: 1;
+}
+.list-item {
+  width: 480px;
+  font-family: Pretendard Regular;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-radius: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd; 
+}
+.list-item h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+.list-item p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #000;
+  padding: 15px;
+  border-radius: 10px;
+}
+.list-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+.calendar-date.highlighted {
+  background-color: #FADF9E;
+}
+.circle {
+  width: 20px;
+  height: 20px;
+  background-color: #FFD572; 
+  border-radius: 50%;
+  margin-right: 15px;
+  flex-shrink: 0;
+  margin-top: -48px;
+}
+
+.intro {
+display: flex;
+background-color: #ffffff;
+max-width: 100vw;
+padding: 0;
+box-sizing: border-box;
+font-family: Pretendard Regular;
+height: 100vh;
+margin: 0;
+position: relative;
+overflow-x: hidden;
+}
+
+.intro .jung {
+left: 50%;
+position: absolute;
+transform: translateX(-50%);
+}
+
+.intro .rectangle {
+background: linear-gradient(
+  180deg,
+  rgb(255, 245, 220) 68%,
+  rgb(255, 255, 255) 100%
+);
+height: calc(99vw * (2088 / 1920));
+left: 50%;
+position: absolute;
+top: 115.7vh;
+width: 99vw;
+transform: translateX(-50%);
+}
+
+.intro .ellipse {
+background-color: #fff5dc;
+border-radius: 50%;
+width: 109.21vw;
+position: absolute;
+left: 50%;
+top: 34.8vh;
+height: 109.21vw;
+transform: translateX(-50%);
+box-sizing: border-box;
+}
+
+.intro .group {
+position: absolute;
+width: 70.99vw;
+height: 21.07vh;
+left: 50%;
+top: 36.9vh;
+transform: translateX(-50%);
+}
+
+.intro .img {
+height: 1144px;
+left: 0;
+position: absolute;
+top: 676px;
+width: 1107px;
+}
+
+.intro .group-2 {
+position: absolute;
+width: 38vw;
+left: 7vw;
+top: 45.8vh;
+}
+
+.intro .vector {
+position: absolute;
+width: 2.37vw;
+height: 8.1vh;
+left: 13.1vw;
+top: 55.6vh;
+}
+
+.intro .flexcontainer {
+flex-direction: column;
+position: absolute;
+gap: 2.78vh;
+height: 16.94vh;
+top: 120.9vh;
+width: 87.4vw;
+left: 50%;
+}
+
+.intro .text {
+align-self: stretch;
+color: #000000;
+font-family: "Pretendard-SemiBold", Helvetica;
+font-size: 1.3vw;
+font-weight: 600;
+letter-spacing: 0;
+position: relative;
+text-align: center;
+transform: translateX(-50%);
+}
+
+.intro .span {
+color: #000000;
+font-family: "Pretendard-SemiBold", Helvetica;
+font-weight: 600;
+letter-spacing: 0;
+}
+
+.intro .group-3 {
+height: 688px;
+left: 1886px;
+position: absolute;
+top: 1384px;
+width: 688px;
+}
+
+.intro .group-4 {
+height: 772px;
+left: 227px;
+position: absolute;
+top: 2006px;
+width: 786px;
+}
+
+.intro .flexcontainer2 {
+display: flex;
+flex-direction: column;
+gap: 1.56vw;
+height: 16.94vh;
+position: absolute;
+top: 238.7vh;
+width: 87.4vw;
+left: 50%;  
+}
+.intro .group-5 {
+width: 4.37vw;
+position: absolute;
+left: 38.7vw;
+right: 56.94vw;
+top: 287.07vh;
+bottom: -186.41vh;  
+}
+
+.intro .vector-2 {
+height: 5.28vh;
+left: 53.91vw;
+position: absolute;
+top: 297.74vh;
+width: 3.07vw;  
+}
+
+.intro .text-wrapper-2 {
+color: #ffbf27;
+font-family: "Lufga ExtraBold", Helvetica;
+font-size: 3.33vw;
+font-weight: 400;
+left: 13.4vw;
+letter-spacing: 0;
+line-height: normal;
+position: absolute;
+top: 27vh;
+}
+
+.intro .group-6 {
+width: 10.94vw;
+height: 18.4vh;
+left: 79vw;
+top: 15.5vh;
+position: absolute;
+}
+
+.icon-pencil {
+height: 688px;
+position: relative;
+width: 688px;
+}
+.box {
+position: absolute;
+width: 49.79vw;
+top: 95.35vh;
+left: -28.57vw;
+gap: 0px;
+bottom: -187.15vh;
+opacity: 0.6;  
+transform: rotate(-0.79deg);
+}
+.smile{
+position: absolute;
+left: -11.62vw;
+right: 61.22vw;
+top: 215.56vh;
+bottom: -154.74vh;
+}
+.pencil{
+position: absolute;
+width: 28.67vw;
+height: 51.04vh;
+left: 62.06vw;
+top: 158.37vh;
+}
+
+.text-wrapper{
+position: absolute;
+width: 16.04vw;
+height: 7.78vh;
+left: 42.14vw;
+top: 292.72vh;
+font-size: 2.6vw;
+color: #FFC027;
+font-weight: 800;
+font-family: 'Poppins';
+}
+
+/*List 부분*/
+
+.sidebar {
+  background-color: #ffffff;
+  height: 1080px;
+  position: relative;
+  width: 664px;
+}
+
+
+
+.sidebar .overlap-group {
+  border: 1.25px solid;
+  border-color: #e1e1e1;
+  border-radius: 44px;
+  height: 207px;
+  position: relative;
+  width: 641px;
+}
+
+.sidebar .text-wrapper {
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica;
+  font-weight: 600;
+  left: 122px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 46px;
+}
+
+.sidebar .div {
+  color: #000000;
+  font-family: "Pretendard-SemiBold", Helvetica;
+  font-size: 18px;
+  font-weight: 400;
+  left: 122px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 115px;
+}
+
+.sidebar .ellipse {
+  background-color: #ffd571;
+  border-radius: 21px;
+  height: 42px;
+  left: 60px;
+  position: absolute;
+  top: 46px;
+  width: 42px;
+}
+
+.sidebar .group-wrapper {
+  background-color: #e2f5f5;
+  height: 164px;
+  left: 424px;
+  position: absolute;
+  top: 21px;
+  width: 164px;
+}
+
+
+.sidebar .image {
+  height: 146px;
+  left: 53px;
+  position: absolute;
+  top: 16px;
+  width: 65px;
+}
+
+/* .sidebar .overlap-wrapper {
+  height: 207px;
+  left: 6px;
+  position: absolute;
+  top: 1098px;
+  width: 645px;
+}
+
+.sidebar p{
+  color: #000000;
+  font-family: "Pretendard-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 400;
+  left: 122px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  top: 115px;
+  width: 261px;
+}
+
+.sidebar .rectangle {
+  background-color: #ffffff;
+  box-shadow: 0px 13px 20.2px #0000000a;
+  height: 210px;
+  left: -12px;
+  position: relative;
+  top: 0;
+  width: 676px;
+}
+
+.sidebar .text-wrapper-2{
+  color: #000000;
+  font-family: "Poppins-SemiBold", Helvetica;
+  font-size: 44px;
+  font-weight: 600;
+  left: 92px;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  top: 65px;
+} */
+
+
+/* Post */
