@@ -716,7 +716,7 @@ font-family: 'Poppins';
 }
 
 .text-box-form {
-  width: 30%; /* 화면의 오른쪽 50%를 차지 */
+  width: 30%;
   height: 30%;
   margin-top: 500px; /* 상단 여백 */
   position: relative;
@@ -755,4 +755,13 @@ font-family: 'Poppins';
   z-index: 10;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
   top: 13%;
   left: 8%;
+}
+
+.submit-button-svg {
+  width: 800px;
+  height: 70px;
+  position: absolute; /* 위치 조정을 위해 absolute 사용 */
+  
+  left: 10%;
+  top: 110%;
 }
