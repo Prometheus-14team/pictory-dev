@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -21,24 +21,27 @@ import  Rain  from "../assets/img/Rain.png";
 
 function Post({ post }) {
 
-  const currentDate = format(new Date(), "yyyy-MM-dd");  
-
+  const currentDate = format(new Date(), "yyyy-MM-dd");
   const [text, setText] = useState('');
+  const [userId, setUserId] = useState(''); // user_id 상태 추가
   const [message, setMessage] = useState('');
+  const formRef = useRef(null); // form을 참조할 ref
 
-  // 텍스트 입력 값 변경 처리
   const handleChange = (e) => setText(e.target.value);
-
-  // 입력 값 초기화 처리
-  const handleReset = () => setText('');
+  const handleUserIdChange = (e) => setUserId(e.target.value); // user_id 상태 업데이트
+  const handleReset = () => {
+    setText('');
+    setUserId(''); 
+  };
 
   // 서버로 데이터 전송 (POST 요청)
-  const handleSubmit = async () => {
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // 기본 폼 제출 방지
     try {
       const response = await fetch(`http://127.0.0.1:5000/get/text`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input: text }),
+        body: JSON.stringify({ user_id: userId, content: text }), //user_id 추가
       });
 
       if (response.ok) {
@@ -53,7 +56,7 @@ function Post({ post }) {
     }
   };
 
-  // 서버로부터 메시지를 받아오기 (GET 요청)
+  // 서버로부터 메시지 받아오기 (GET 요청)
   useEffect(() => {
     const fetchMessage = async () => {
       try {
@@ -64,10 +67,10 @@ function Post({ post }) {
         console.error('데이터 가져오기 오류:', error);
       }
     };
-
-    fetchMessage();  // 컴포넌트가 마운트될 때 데이터 요청
-  }, []);  // 빈 배열로 useEffect가 컴포넌트 마운트 시 한 번만 실행됨
-
+    fetchMessage();
+  }, []); // 빈 배열로 useEffect가 컴포넌트 마운트 시 한 번만 실행됨
+  
+  
   return (
     <div className="container">
       <div className="back">
@@ -82,27 +85,34 @@ function Post({ post }) {
               {currentDate} 
           </text>
 
-        <form onSubmit={handleSubmit} className="text-box-form">
+          <div className="textbox">
+            <form>
+              {/* user_id 추가 */}
+              <input
+              value={userId}
+              onChange={handleUserIdChange} // user_id 입력 필드 핸들러
+              className="user-id-input" // 디자인 필요함
+              placeholder="User ID를 입력하세요..."
+              />
+            </form>
+            <PostSubmit handleSubmit={handleSubmit} />
           
-          <svg className="text-box-svg" xmlns="http://www.w3.org/2000/svg">
-            
-            <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
-          </svg>
-          <textarea
-            value={text}
-            onChange={handleChange}
-            className="text-input"
-            placeholder="텍스트를 입력하세요..."
-          />
-          <PostSubmit 
-    
-            onClick={handleSubmit}
-          />
 
-        </form>
+          
+            <form ref={formRef} onSubmit={handleSubmit} className="text-box-form">
+              <svg className="text-box-svg" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+              </svg>
+              <textarea
+                value={text}
+                onChange={handleChange}
+                className="text-input"
+                placeholder="텍스트를 입력하세요..."
+              />
+            </form>
+        </div>
+        
     </div>
-
-
   </div>
   );
 }

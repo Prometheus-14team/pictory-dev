@@ -1,7 +1,7 @@
 import os
 import numpy as np
 from PIL import Image
-
+import json
 from flask import (
     Flask, 
     render_template, 
@@ -71,7 +71,18 @@ def create_audio(date):
 """
 
 app = Flask(__name__, static_folder="../calendar-web/build")
-CORS(app)
+#CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})  # 모든 출처에서 요청 허용
+
+# 임시
+# JSON 데이터 불러오기
+with open("diary_data.json", "r", encoding="utf-8") as file:
+    diary_data = json.load(file)
+    
+def save_diary_data():
+    """diary_data를 diary_data.json 파일에 저장합니다."""
+    with open("diary_data.json", "w", encoding="utf-8") as file:
+        json.dump(diary_data, file, ensure_ascii=False, indent=4)
 
 
 @app.route("/", defaults={"path": ""})
@@ -97,11 +108,52 @@ def send_audio():
 def send_text():
     pass
 
+#이전
+# @app.route("/get/text", methods=["POST"])
+# def get_text():
+#     data = request.get_json()
+#     print(data)
+#     return jsonify({"message": "Success"})
+
+#이 아래 모두 임시
 @app.route("/get/text", methods=["POST"])
-def get_text():
+def post_text():
     data = request.get_json()
-    print(data)
-    return jsonify({"message": "Success"})
+    user_id = data.get("user_id")
+    content = data.get("content")
+
+    if not user_id or not content:
+        return jsonify({"message": "user_id와 일기 내용을 적어주세요."}), 400
+
+    if user_id not in diary_data:
+        diary_data[user_id] = {}
+
+    diary_data[user_id]["content"] = content
+    diary_data[user_id]["ai_output"] = {
+        "summary": "",
+        "key_nouns": [],
+        "image_path": "",
+        "audio_path": ""
+    }
+
+    save_diary_data()
+    
+    return jsonify({"message": "Data saved successfully", "data": diary_data[user_id]}), 200
+
+
+@app.route("/post/text", methods=["GET"])
+def get_text():
+    user_id = request.args.get("user_id")
+
+    if not user_id:
+        return jsonify({"message": "Missing required query parameter: user_id"}), 400
+
+    user_data = diary_data.get(user_id)
+    if not user_data:
+        return jsonify({"message": "User not found"}), 404
+
+    return jsonify({"message": "Success", "data": user_data}), 200
+
 
 
 if __name__ == '__main__':

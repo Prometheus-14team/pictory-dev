@@ -700,36 +700,68 @@ font-family: 'Poppins';
 
 
 .post-and-textbox {
-  display: flex; /* 두 요소를 가로로 정렬 */
+  display: flex; 
+  flex-direction: row;
   justify-content: space-between; /* 가운데 정렬 */
-  align-items: flex-start; /* 세로 정렬 */
+  align-items: flex-start;
   width: 100%; /* 전체 너비 사용 */
+  position: relative; /* 자식 요소의 위치를 상대적으로 조정 */
+  top: -50px; /* post-and-textbox를 위로 올려서 간격을 좁힘 */
 }
 
 .post-layer {
-  height: 716px;
-  width: 620px;
-  margin-right: 20px; /* 두 요소 사이에 여백 추가 */
-  margin-top: 80px; /* 상단 여백을 통해 위치 조정 */
-  margin-left: 50px; /* 왼쪽 여백을 통해 위치 조정 */
-  overflow: visible;
+  width: 50%; /* 화면 너비의 50% */
+  margin-right: 10px; /* 두 요소 사이의 여백 */
+  margin-left: 40px;
 }
 
-.text-box-form {
+.textbox {
+  width: 50%; /* 화면 너비의 50% */
+  margin-left: 10px; /* 두 요소 사이의 여백 */
+  padding: auto;
+  margin-right: 40px;
+}
+
+/* 
+.post-layer {
+  height: 716px;
+  width: 620px;
+  margin-right: 20px; 
+  margin-top: 80px; 
+  margin-left: 50px; 
+  overflow: visible; 
+}
+
+*/
+
+
+
+.main-form {
   width: 30%;
   height: 30%;
-  margin-top: 500px; /* 상단 여백 */
+  margin-top: 500px; 
   position: relative;
-  z-index: 1; /* 텍스트 입력창이 다른 요소 위에 보이도록 설정 */
+  z-index: 1;  
+} 
+
+.sub-form{
+  
+}
+
+
+/*
+.user-id-input{
+  position: absolute;
+  z-index: 1; 
 }
 
 .text-input {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* 중앙 정렬 */
-  width: 600px; /* 원하는 너비 */
-  height: 350px; /* 원하는 높이 */
+  transform: translate(-50%, -50%); 
+  width: 600px; 
+  height: 350px; 
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
@@ -742,7 +774,7 @@ font-family: 'Poppins';
   border-color: #007bff;
 }
 
-
+*/
 .svg-text {
   fill: #000;
   font-family: Pretendard;
@@ -761,7 +793,6 @@ font-family: 'Poppins';
   width: 800px;
   height: 70px;
   position: absolute; /* 위치 조정을 위해 absolute 사용 */
-  
   left: 10%;
   top: 110%;
 }
