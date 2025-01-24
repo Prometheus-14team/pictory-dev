@@ -824,3 +824,11 @@ html, body {
   color: #333;
   pointer-events: none; /* 텍스트 클릭 방지 */
 }
+
+
+/* final post */
+
+.final-post-layer {
+  width: 1329.249px;
+  height: 953.511px;
+}

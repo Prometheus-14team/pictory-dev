@@ -77,7 +77,6 @@ function Post() {
       <PostComponent
         currentDate={currentDate}
         text={text}
-        userId={userId}
         handleChange={handleChange}
         handleUserIdChange={handleUserIdChange}
         handleSubmit={handleSubmit}
