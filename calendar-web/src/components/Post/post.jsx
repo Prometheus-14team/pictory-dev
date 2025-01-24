@@ -43,19 +43,7 @@ function Post({
           </text>
 
           <div className="textbox">
-            <form>
-              {/* user_id 추가 */}
-              <input
-              value={userId}
-              onChange={handleUserIdChange} // user_id 입력 필드 핸들러
-              className="user-id-input" // 디자인 필요함
-              placeholder="User ID를 입력하세요..."
-              />
-            </form>
             <PostSubmit handleSubmit={handleSubmit} />
-          
-            
-          
             <form ref={formRef} onSubmit={handleSubmit} className="text-box-form">
               <svg className="text-box-svg" xmlns="http://www.w3.org/2000/svg">
                 <rect x="0" y="0" width="100%" height="100%" fill="transparent" />

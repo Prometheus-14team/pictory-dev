@@ -701,36 +701,45 @@ font-family: 'Poppins';
 
 .post-and-textbox {
   display: flex; 
-  flex-direction: row;
-  justify-content: flex-end; /* 가운데 정렬 */
-  align-items: flex-start;
-  width: 100%; /* 전체 너비 사용 */
   position: relative; /* 자식 요소의 위치를 상대적으로 조정 */
-  top: -50px; /* post-and-textbox를 위로 올려서 간격을 좁힘 */
-  padding-right: 40px;
 }
 
 .post-layer {
-  width: 50%; /* 화면 너비의 50% */
-  margin-right: 5%; /* 두 요소 사이의 여백 */
-  margin-left: auto;
+  width: 92vw;
+  position: relative;
+  left: 25vw;
+  top: 10vh;
 }
 
 .textbox { /*text-box-form과 user-id-input의 부모요소*/
-  width: 50%; /* 화면 너비의 50% */
-  margin-left: 5%; /* 두 요소 사이의 여백 */
-  padding: auto;
-  margin-right: auto;
-  display: flex;
-  flex-direction: row;
-  gap:10px;
+  position: relative;
+  width: 52vw;
+  top: 33vh;
+  left: 2vw;
 }
 
+.text-input {
+  width: 42vw; 
+  height: 21.65vw;
+  font-size: 22px;
+  font-family: Pretendard;
+  padding: 1vw 1vw;
+  border-radius: 1vw;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.8);
+  outline: 3px solid black;
+  box-shadow: inset 0 4px 6px rgba(196, 196, 196, 1);
+}
 
 .text-box-form {
 
 }
 
+.post-submit{
+  position: relative;
+  left: 18vw;
+  top: 5vh;
+}
 
 .user-id-input{
   position: relative;
@@ -745,19 +754,6 @@ font-family: 'Poppins';
 }
 
 
-.text-input {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); 
-  width: 600px; 
-  height: 350px; 
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  background-color: rgba(255, 255, 255, 0.8);
-}
 
 .text-input:focus {
   outline: none;

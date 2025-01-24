@@ -1,6 +1,7 @@
 // PostSubmit.jsx
 import React from "react";
 import { ReactComponent as SubmitButton } from "../assets/Submit.svg";
+import "../assets/styles.css";
 
 function postSubmit({ handleSubmit }) {
   const handleClick = (e) => {
@@ -9,8 +10,10 @@ function postSubmit({ handleSubmit }) {
   };
 
   return (
+    <div className="post-submit">
     <div onClick={handleClick} style={{ display: "inline-block", cursor: "pointer" }}>
       <SubmitButton className="submit-button-svg" />
+    </div>
     </div>
   );
 }
