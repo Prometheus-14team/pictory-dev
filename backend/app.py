@@ -2,6 +2,7 @@ import os
 import numpy as np
 from PIL import Image
 import json
+import uuid
 from flask import (
     Flask, 
     render_template, 
@@ -119,42 +120,49 @@ def send_text():
 @app.route("/get/text", methods=["POST"])
 def post_text():
     data = request.get_json()
-    user_id = data.get("user_id")
+
     content = data.get("content")
 
-    if not user_id or not content:
-        return jsonify({"message": "user_id와 일기 내용을 적어주세요."}), 400
+    
+    if not content:
+        return jsonify({"message": "Content is required"}), 400
 
-    if user_id not in diary_data:
-        diary_data[user_id] = {}
+    # 고유 번호 계산 (현재 diary_data의 가장 큰 키값을 찾아서 +1)
+    new_id = str(max(map(int, diary_data.keys()), default=0) + 1)
 
-    diary_data[user_id]["content"] = content
-    diary_data[user_id]["ai_output"] = {
-        "summary": "",
-        "key_nouns": [],
-        "image_path": "",
-        "audio_path": ""
+    # 새로운 일기 항목 추가
+    diary_data[new_id] = {
+        "content": content,
+        "ai_output": {
+            "summary": "",
+            "key_nouns": [],
+            "image_path": "",
+            "audio_path": ""
+        }
     }
 
+    # 데이터 저장
     save_diary_data()
-    
-    return jsonify({"message": "Data saved successfully", "data": diary_data[user_id]}), 200
+
+    return jsonify({"message": "Data saved successfully", "data": diary_data[new_id]}), 200
 
 
 @app.route("/post/text", methods=["GET"])
 def get_text():
-    user_id = request.args.get("user_id")
+    # diary_id = request.args.get("diary_id")
+    diary_id = "4"
+    
+    if not diary_id:
+        return jsonify({"message": "Missing required query parameter: diary_id"}), 400
 
-    if not user_id:
-        return jsonify({"message": "Missing required query parameter: user_id"}), 400
+    diary_data_entry = diary_data.get(diary_id)
+    
+    if not diary_data_entry:
+        return jsonify({"message": "Diary not found"}), 404
 
-    user_data = diary_data.get(user_id)
-    if not user_data:
-        return jsonify({"message": "User not found"}), 404
-
-    return jsonify({"message": "Success", "data": user_data}), 200
-
-
+    key_nouns = diary_data_entry.get("ai_output", {}).get("key_nouns", [])
+    
+    return jsonify({"nouns": key_nouns}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
