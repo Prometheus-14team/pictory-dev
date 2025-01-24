@@ -672,6 +672,11 @@ font-family: 'Poppins';
 
 
 /* Post */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
 
 .container {
   display: flex;
@@ -686,8 +691,8 @@ font-family: 'Poppins';
   background-color: #476161;
   border-radius: 34px;
   position: absolute;
-  top: 3px;
-  left: 3px;
+  top: 2vh;
+  left: 1vw;
 }
 
 .back .back-img {
@@ -762,6 +767,7 @@ font-family: 'Poppins';
 
 
 .svg-text {
+  position: relative;
   fill: #000;
   font-family: Pretendard;
   font-size: 24px;
@@ -769,10 +775,10 @@ font-family: 'Poppins';
   font-weight: 600;
   line-height: normal;
   letter-spacing: 0.96px;
-  position: absolute;
   z-index: 10;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
-  top: 13%;
-  left: 8%;
+  top: 13vh;
+  left: -37vw;
+  white-space: nowrap;
 }
 
 .submit-button-svg {
