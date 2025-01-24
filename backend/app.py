@@ -1,91 +1,22 @@
 import os
+import datetime
+import scipy
+import torch
 import numpy as np
 from PIL import Image
-import json
-import uuid
-from flask import (
-    Flask, 
-    render_template, 
-    request, 
-    redirect, 
-    url_for,
-    jsonify,
-    send_from_directory
-)
+
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-"""
-app = Flask(__name__)
-diary_data = {}
-image_data = {}
-audio_data = {}
+
+from db_models import Diary, db
+from models import ControlNet, AudioLDM, LLM, FastText, stemmer, get_mapped_words
 
 
-@app.route("/")
-def calendar():
-    return render_template("calendar.html")
+# Flask API
+app = Flask(__name__, static_folder="../frontend/build")
+CORS(app)
 
-
-@app.route("/diary/<date>")
-def diary(date):
-    content = diary_data.get(date, "")
-    return render_template("diary.html", date=date, content=content)
-
-
-@app.route("/diary/<date>/write", methods=["POST"])
-def write_diary(date):
-    content = request.form.get("content")
-    diary_data[date] = content
-    return redirect(url_for("calendar"))
-
-
-@app.route("/diary/<date>/delete", methods=["POST"])
-def delete_diary(date):
-    if date in diary_data:
-        del diary_data[date]
-    return redirect(url_for("calendar"))
-
-
-@app.route("/diary/<date>/create", methods=["GET", "POST"])
-def create(date):
-    image = image_data.get(date, "")
-    audio = audio_data.get(date, "")
-    image_url = url_for('static', filename=f'images/{date}_image.png')
-    print(image_url)
-    return render_template("create.html", date=date, image=image)
-
-
-@app.route("/diary/<date>/create/image", methods=["POST"])
-def create_image(date):
-    color = np.random.randint(0,3)
-    image = np.zeros((512,512,3), dtype=np.uint8)
-    image[:,:,color] = 255
-    image = Image.fromarray(image)
-    image_data[date] = f"/static/images/{date}_image.png"
-    image.save(f"./static/images/{date}_image.png")
-    return redirect(url_for("create", date=date))
-
-
-@app.route("/diary/<date>/create/audio", methods=["POST"])
-def create_audio(date):
-    content = diary_data.get(date)
-    return redirect(url_for("create", date=date))
-"""
-
-app = Flask(__name__, static_folder="../calendar-web/build")
-#CORS(app)
-CORS(app, resources={r"/*": {"origins": "*"}})  # 모든 출처에서 요청 허용
-
-# 임시
-# JSON 데이터 불러오기
-with open("diary_data.json", "r", encoding="utf-8") as file:
-    diary_data = json.load(file)
-    
-def save_diary_data():
-    """diary_data를 diary_data.json 파일에 저장합니다."""
-    with open("diary_data.json", "w", encoding="utf-8") as file:
-        json.dump(diary_data, file, ensure_ascii=False, indent=4)
-
-
+# 화면
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react_app(path):
@@ -95,74 +26,165 @@ def serve_react_app(path):
         return send_from_directory(app.static_folder, "index.html")
 
 
-@app.route('/api/image', methods=["POST"])
-def send_image():
-    pass
+# 스케치 보내기
+@app.route("/GET/sketch/<date>", methods=["GET"])
+def get_sketch(date):
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        return send_from_directory(diary.sketch)
+    else:
+        return send_from_directory("data/sketches/white.png")
 
 
-@app.route('/api/audio', methods=["POST"])
-def send_audio():
-    pass
+# 그림일기의 그림 보내기
+@app.route("/GET/image/<date>", methods=["GET"])
+def get_image(date):
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        return send_from_directory(diary.image)
+    else:
+        return jsonify({"message": "Invalid Data"})
 
 
-@app.route('/api/text', methods=["POST"])
-def send_text():
-    pass
+# 그림일기의 배경음악 보내기
+@app.route("/GET/audio/<date>", methods=["GET"])
+def get_audio(date):
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        return send_from_directory(diary.audio)
+    else:
+        return jsonify({"message": "Invalid Data"})
 
-#이전
-# @app.route("/get/text", methods=["POST"])
-# def get_text():
-#     data = request.get_json()
-#     print(data)
-#     return jsonify({"message": "Success"})
 
-#이 아래 모두 임시
-@app.route("/get/text", methods=["POST"])
-def post_text():
+# 그림일기 내용 보내기
+@app.route("/GET/text/<date>", methods=["GET"])
+def get_text(date):
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        return jsonify({"raw_text": diary.raw_text, "summarized_text_kr": diary.summarized_text_kr})
+    else:
+        return jsonify({"raw_text": "", "summarized_text_kr": ""})
+
+
+# 그림일기 드로잉 요소 보내기
+@app.route("/GET/drawing/<data>", methods=["GET"])
+def get_drawing(date):
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        diary_objects = stemmer(diary.raw_text)
+        mapped_objects = get_mapped_words(diary_objects)
+        mapped_objects += fasttext.get_similar_words(mapped_objects)
+        mapped_pngs = list(map(lambda x: f"./data/{x}.png"))
+        return jsonify({"drawing": list(zip(mapped_objects, mapped_pngs))})
+    else:
+        return jsonify({"drawing": []})
+
+
+# 그림일기 모든 요소 보내기
+@app.route("/GET/all", methods=["GET"])
+def get_all():
+    diaries = Diary.query.all()
+    return jsonify({"all": sorted([diary.to_dict() for diary in diaries], key=lambda x: x["date"])})
+
+
+@app.route("/POST/image/<date>", methods=["POST"])
+def post_image(date):
+    sketch = request.files["file"]
+    image = controlnet.generate(sketch)
+
+    sketch_path = os.path.join("data/sketches", f"{date}.png")
+    image_path = os.path.join("data/images", f"{date}.png")
+    sketch.save(sketch_path)
+    image.save(image_path)
+
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    diary.sketch = sketch_path
+    diary.image = image_path
+    db.session.commit()
+    return jsonify({"message": "success"})
+
+
+@app.route("/POST/audio/<date>", methods=["POST"])
+def post_audio(date):
+    diary = Diary.query.filter_by(date=date).first()
+    audio = audioldm.generate(diary.summarized_text_en)
+
+    audio_path = os.path.join("data/audios", f"{date}.wav")
+    scipy.io.wavfile.write(audio_path, rate=16000, data=audio)
+    
+    diary = Diary.query.filter_by(date=date).first()
+    diary.audio = audio_path
+    db.session.commit()
+    return jsonify({"message": "success"})
+
+
+@app.route("/POST/text/<date>", methods=["POST"])
+def post_text(date):
     data = request.get_json()
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    raw_text = data.get("raw_text")
 
-    content = data.get("content")
+    diary = Diary.query.filter_by(date=date).first()
+    if diary:
+        if diary.raw_text != raw_text:
+            summarized_text_kr = llm.summarize(raw_text)
+            summarized_text_en = llm.translate(summarized_text_kr)
+            
+            diary.raw_text = raw_text
+            diary.summarized_text_kr = summarized_text_kr
+            diary.summarized_text_en = summarized_text_en
+    else:
+        summarized_text_kr = llm.summarize(raw_text)
+        summarized_text_en = llm.translate(summarized_text_kr)
+        
+        diary = Diary(
+            date=date, 
+            raw_text=raw_text, 
+            summarized_text_kr=summarized_text_kr,
+            summarized_text_en=summarized_text_en
+        )
+        db.session.add(diary)
+    db.session.commit()
+    return jsonify({"message": "success"})
 
-    
-    if not content:
-        return jsonify({"message": "Content is required"}), 400
+"""
+# 그림일기 드로잉 검색
+@app.route("/GET/drawing/search", methods=["GET", "POST"])
+def get_drawing(date):
+    data = request.get_json()
+    tag = data.get("tag")
 
-    # 고유 번호 계산 (현재 diary_data의 가장 큰 키값을 찾아서 +1)
-    new_id = str(max(map(int, diary_data.keys()), default=0) + 1)
+    mapped_objects = fasttext.get_similar_words([tag])
+    mapped_pngs = list(map(lambda x: f"./data/{x}.png"))
+    return jsonify({"drawing": list(zip(mapped_objects, mapped_pngs))})
+"""
 
-    # 새로운 일기 항목 추가
-    diary_data[new_id] = {
-        "content": content,
-        "ai_output": {
-            "summary": "",
-            "key_nouns": [],
-            "image_path": "",
-            "audio_path": ""
-        }
-    }
+# 데이터베이스
+basdir = os.path.abspath(os.path.dirname(__file__))
+dbfile = os.path.join(basdir, "db.sqlite")
 
-    # 데이터 저장
-    save_diary_data()
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + dbfile
+app.config["SQLALCHEMY_COMMIT_ON_TEARDOWN"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = "pictory"
 
-    return jsonify({"message": "Data saved successfully", "data": diary_data[new_id]}), 200
+db.init_app(app)
+db.app = app
+with app.app_context():
+    db.create_all()
 
-
-@app.route("/post/text", methods=["GET"])
-def get_text():
-    # diary_id = request.args.get("diary_id")
-    diary_id = "4"
-    
-    if not diary_id:
-        return jsonify({"message": "Missing required query parameter: diary_id"}), 400
-
-    diary_data_entry = diary_data.get(diary_id)
-    
-    if not diary_data_entry:
-        return jsonify({"message": "Diary not found"}), 404
-
-    key_nouns = diary_data_entry.get("ai_output", {}).get("key_nouns", [])
-    
-    return jsonify({"nouns": key_nouns}), 200
+# 인공지능 모델
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+llm = LLM(device=device)
+fasttext = FastText()
+controlnet = ControlNet(device=device)
+audioldm = AudioLDM(device=device)
 
 if __name__ == '__main__':
     app.run(debug=True)
