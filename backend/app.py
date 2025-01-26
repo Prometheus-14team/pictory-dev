@@ -71,18 +71,27 @@ def get_text(date):
 
 
 # 그림일기 드로잉 요소 보내기
-@app.route("/GET/drawing/<data>", methods=["GET"])
+@app.route("/GET/tag/<date>", methods=["GET"])
 def get_drawing(date):
-    date = datetime.datetime.strptime(date, "%Y-%m-%d")
-    diary = Diary.query.filter_by(date=date).first()
-    if diary:
-        diary_objects = stemmer(diary.raw_text)
-        mapped_objects = get_mapped_words(diary_objects)
-        mapped_objects += fasttext.get_similar_words(mapped_objects)
-        mapped_pngs = list(map(lambda x: f"./data/{x}.png"))
-        return jsonify({"drawing": list(zip(mapped_objects, mapped_pngs))})
-    else:
-        return jsonify({"drawing": []})
+    # date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    # diary = Diary.query.filter_by(date=date).first()
+    # if diary:
+    #     diary_objects = stemmer(diary.raw_text)
+    #     mapped_objects = get_mapped_words(diary_objects)
+    #     mapped_objects += fasttext.get_similar_words(mapped_objects)
+    #     mapped_pngs = list(map(lambda x: f"./data/{x}.png"))
+    #     return jsonify({"tag": tag_data})
+    # else:
+    #     print(f"No diary found for {date}") 
+    #     return jsonify({"tag": []})
+    tag_data = [
+        ["cat", "./data/cat/1.png","./data/cat/2.png","./data/cat/3.png"],
+        ["dog", "./data/dog/1.png"],
+        ["flower", "./data/flower/1.png"],
+        ["우림", ".data/rainforest/1.png"]
+    
+        ]
+    return jsonify({"tag":tag_data})
 
 
 # 그림일기 모든 요소 보내기
@@ -94,33 +103,33 @@ def get_all():
 
 @app.route("/POST/image/<date>", methods=["POST"])
 def post_image(date):
-    sketch = request.files["file"]
-    image = controlnet.generate(sketch)
+    # sketch = request.files["file"]
+    # image = controlnet.generate(sketch)
 
-    sketch_path = os.path.join("data/sketches", f"{date}.png")
-    image_path = os.path.join("data/images", f"{date}.png")
-    sketch.save(sketch_path)
-    image.save(image_path)
+    # sketch_path = os.path.join("data/sketches", f"{date}.png")
+    # image_path = os.path.join("data/images", f"{date}.png")
+    # sketch.save(sketch_path)
+    # image.save(image_path)
 
-    date = datetime.datetime.strptime(date, "%Y-%m-%d")
-    diary = Diary.query.filter_by(date=date).first()
-    diary.sketch = sketch_path
-    diary.image = image_path
-    db.session.commit()
+    # date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    # diary = Diary.query.filter_by(date=date).first()
+    # diary.sketch = sketch_path
+    # diary.image = image_path
+    # db.session.commit()
     return jsonify({"message": "success"})
 
 
 @app.route("/POST/audio/<date>", methods=["POST"])
 def post_audio(date):
-    diary = Diary.query.filter_by(date=date).first()
-    audio = audioldm.generate(diary.summarized_text_en)
+    # diary = Diary.query.filter_by(date=date).first()
+    # audio = audioldm.generate(diary.summarized_text_en)
 
-    audio_path = os.path.join("data/audios", f"{date}.wav")
-    scipy.io.wavfile.write(audio_path, rate=16000, data=audio)
+    # audio_path = os.path.join("data/audios", f"{date}.wav")
+    # scipy.io.wavfile.write(audio_path, rate=16000, data=audio)
     
-    diary = Diary.query.filter_by(date=date).first()
-    diary.audio = audio_path
-    db.session.commit()
+    # diary = Diary.query.filter_by(date=date).first()
+    # diary.audio = audio_path
+    # db.session.commit()
     return jsonify({"message": "success"})
 
 
@@ -131,26 +140,26 @@ def post_text(date):
     raw_text = data.get("raw_text")
 
     diary = Diary.query.filter_by(date=date).first()
-    if diary:
-        if diary.raw_text != raw_text:
-            summarized_text_kr = llm.summarize(raw_text)
-            summarized_text_en = llm.translate(summarized_text_kr)
+    # if diary:
+    #     if diary.raw_text != raw_text:
+    #         summarized_text_kr = llm.summarize(raw_text)
+    #         summarized_text_en = llm.translate(summarized_text_kr)
             
-            diary.raw_text = raw_text
-            diary.summarized_text_kr = summarized_text_kr
-            diary.summarized_text_en = summarized_text_en
-    else:
-        summarized_text_kr = llm.summarize(raw_text)
-        summarized_text_en = llm.translate(summarized_text_kr)
+    #         diary.raw_text = raw_text
+    #         diary.summarized_text_kr = summarized_text_kr
+    #         diary.summarized_text_en = summarized_text_en
+    # else:
+    #     summarized_text_kr = llm.summarize(raw_text)
+    #     summarized_text_en = llm.translate(summarized_text_kr)
         
-        diary = Diary(
-            date=date, 
-            raw_text=raw_text, 
-            summarized_text_kr=summarized_text_kr,
-            summarized_text_en=summarized_text_en
-        )
-        db.session.add(diary)
-    db.session.commit()
+    #     diary = Diary(
+    #         date=date, 
+    #         raw_text=raw_text, 
+    #         summarized_text_kr=summarized_text_kr,
+    #         summarized_text_en=summarized_text_en
+    #     )
+    #     db.session.add(diary)
+    # db.session.commit()
     return jsonify({"message": "success"})
 
 """
@@ -180,11 +189,11 @@ with app.app_context():
     db.create_all()
 
 # 인공지능 모델
-device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-llm = LLM(device=device)
-fasttext = FastText()
-controlnet = ControlNet(device=device)
-audioldm = AudioLDM(device=device)
+# device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+# llm = LLM(device=device)
+# fasttext = FastText()
+# controlnet = ControlNet(device=device)
+# audioldm = AudioLDM(device=device)
 
 if __name__ == '__main__':
     app.run(debug=True)

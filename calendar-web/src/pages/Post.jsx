@@ -26,10 +26,10 @@ function Post() {
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
     try {
-      const response = await fetch(`http://127.0.0.1:5000/get/text`, {
+        const response = await fetch(`http://127.0.0.1:5000/POST/text/${currentDate}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: text }), 
+        body: JSON.stringify({ raw_text: text }), 
       });
 
       if (response.ok) {
@@ -49,10 +49,13 @@ function Post() {
   const fetchNouns = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`http://127.0.0.1:5000/post/text`);
+      const currentDate = format(new Date(), "yyyy-MM-dd");
+      const response = await fetch(`http://127.0.0.1:5000/GET/tag/${currentDate}`);
       if (response.ok) {
         const data = await response.json();
-        setNouns(data.nouns || []); // 명사 리스트 가져오기
+        const nouns = data.tag.map((item) => item[0]);  
+        setNouns(nouns); // 명사 리스트 가져오기
+        
       } else {
         console.error('명사 데이터를 가져오지 못했습니다.');
       }
@@ -70,6 +73,7 @@ function Post() {
       setIsPostSubmitted(false); // 다시 초기화
     }
   }, [isPostSubmitted]); // POST 요청이 발생했을 때만 실행
+  
   
 
   return (

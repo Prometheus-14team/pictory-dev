@@ -4,7 +4,10 @@ import fasttext
 from konlpy.tag import Okt
 
 
-TARGET_WORDS = list(map(lambda x: x.rstrip(".png"), os.listdir("../data/drawings")))
+script_dir = os.path.dirname(os.path.abspath(__file__))
+base_path = os.path.join(script_dir, "..", "data", "drawings")
+
+TARGET_WORDS = list(map(lambda x: x.rstrip(".png"), os.listdir(base_path)))
 
 
 class FastText():

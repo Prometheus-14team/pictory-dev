@@ -7,12 +7,12 @@ import "../assets/styles.css";
 function Tag({ nouns }) {
     return (
       <div className="tag-container">
-        {/* 최대 3개의 TagActive를 렌더링 */}
-        {nouns.slice(0, 3).map((noun, index) => (
+        
+        {nouns.slice(0, 10).map((noun, index) => (
           <div key={index} className="tag-item">
-            {/* TagActive SVG */}
+            
             <TagActive className="tag" />
-            {/* Tag 위에 명사 텍스트 렌더링 */}
+            
             <span className="noun-text">{noun}</span>
           </div>
         ))}
