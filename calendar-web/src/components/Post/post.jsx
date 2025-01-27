@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 import "../assets/styles.css";
 import EmotionFace from "./EmotionFace";
 import  postLayer  from "../assets/post.svg";
-import textBox from "../assets/textBox.svg";
 import { ReactComponent as PostLayer } from "../assets/post.svg";
-import { ReactComponent as TextBox } from "../assets/textBox.svg";
 
 import PostSubmit from "./postsubmit";
-
+import t from "../assets/img/Text.png";
 import backButton from "../assets/img/backButton.png"
 import  Sun  from "../assets/img/Sun.png";
 import  cloud  from "../assets/img/Cloud.png";
@@ -41,13 +39,10 @@ function Post({
           <text className="svg-text">
               {currentDate} 
           </text>
-
           <div className="textbox">
             <PostSubmit handleSubmit={handleSubmit} />
-            <form ref={formRef} onSubmit={handleSubmit} className="text-box-form">
-              <svg className="text-box-svg" xmlns="http://www.w3.org/2000/svg">
-                <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
-              </svg>
+            <form ref={formRef} onSubmit={handleSubmit}>
+              <img src={t} style={{width:"45vw"}}/>
               <textarea
                 value={text}
                 onChange={handleChange}
@@ -56,7 +51,6 @@ function Post({
               />
             </form>
         </div>
-        
     </div>
   </div>
   );
