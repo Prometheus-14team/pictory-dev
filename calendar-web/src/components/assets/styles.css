@@ -821,3 +821,18 @@ html, body {
   pointer-events: none; /* 텍스트 클릭 방지 */
   white-space: nowrap;
 }
+
+.image-dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  z-index: 10;
+}
+
+.dropdown-image {
+  width: 50px;
+  height: 50px;
+  margin: 5px;
+  cursor: pointer;
+}

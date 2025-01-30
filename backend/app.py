@@ -16,6 +16,10 @@ from models import ControlNet, AudioLDM, LLM, FastText, stemmer, get_mapped_word
 app = Flask(__name__, static_folder="../frontend/build")
 CORS(app)
 
+# 정적 파일 서빙 설정 (이미지 폴더 지정)
+DRAWINGS_DIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data", "drawings")
+
+
 # 화면
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
@@ -37,7 +41,7 @@ def get_sketch(date):
         return send_from_directory("data/sketches/white.png")
 
 
-# 그림일기의 그림 보내기
+# 그림일기의 채색된 그림 보내기
 @app.route("/GET/image/<date>", methods=["GET"])
 def get_image(date):
     date = datetime.datetime.strptime(date, "%Y-%m-%d")
@@ -69,10 +73,14 @@ def get_text(date):
     else:
         return jsonify({"raw_text": "", "summarized_text_kr": ""})
 
+# 그림일기 드로잉 전체 그림 보내기
+@app.route("/data/drawings/<filename>")
+def get_drawing(filename):
+    return send_from_directory(DRAWINGS_DIR, filename)
 
 # 그림일기 드로잉 요소 보내기
 @app.route("/GET/tag/<date>", methods=["GET"])
-def get_drawing(date):
+def get_drawing_tag(date):
     # date = datetime.datetime.strptime(date, "%Y-%m-%d")
     # diary = Diary.query.filter_by(date=date).first()
     # if diary:
@@ -84,14 +92,17 @@ def get_drawing(date):
     # else:
     #     print(f"No diary found for {date}") 
     #     return jsonify({"tag": []})
-    tag_data = [
-        ["cat", "./data/cat/1.png","./data/cat/2.png","./data/cat/3.png"],
-        ["dog", "./data/dog/1.png"],
-        ["flower", "./data/flower/1.png"],
-        ["우림", ".data/rainforest/1.png"]
+   
     
-        ]
+    tag_data = [
+        ["강아지", f"/data/drawings/강아지.png", f"/data/drawings/개구리.png", f"/data/drawings/골격모형.png", f"/data/drawings/곰.png"],  # URL 형태로 수정
+        ["고양이", f"/data/drawings/고양이.png"],
+        ["가방", f"/data/drawings/가방.png"],
+        ["고슴도치", f"/data/drawings/고슴도치.png"],
+    ]
+    
     return jsonify({"tag":tag_data})
+
 
 
 # 그림일기 모든 요소 보내기
