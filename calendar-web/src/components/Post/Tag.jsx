@@ -1,6 +1,7 @@
 // Tag 컴포넌트
 import React, { useState, useEffect } from "react"
 import { ReactComponent as TagActive } from "../assets/tagActive.svg";
+import { ReactComponent as TagHover } from "../assets/tagHover.svg";
 import "../assets/styles.css";
 
 function Tag({ nouns, onImagesSelected }) {
@@ -16,17 +17,19 @@ function Tag({ nouns, onImagesSelected }) {
           onMouseEnter={() => setHoveredNoun(noun)}
           onMouseLeave={() => setHoveredNoun(null)}
         >
-          <TagActive className="tag" />
+          {hoveredNoun === noun ? (
+            <TagHover className="tag" /> // hover 시 이미지
+          ) : (
+            <TagActive className="tag" /> // 기본 이미지
+          )}
           <span className="noun-text">{noun}</span>
-
-        
           {hoveredNoun === noun && images.length > 0 && (
             <div className="image-dropdown">
               {images.map((image, imgIndex) => (
                 <img
                   key={imgIndex}
                   src={`http://localhost:5000/${image}`}
-                  alt={noun}
+                  
                   className="dropdown-image"
                   onClick={() => onImagesSelected(`http://localhost:5000/${image}`)} // 이미지 선택 시 부모 컴포넌트에 전달
                 />

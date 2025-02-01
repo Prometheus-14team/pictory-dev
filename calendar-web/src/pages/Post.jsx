@@ -122,7 +122,7 @@ function Post() {
 
       if (startX >= x && startX <= x + width && startY >= y && startY <= y + height) {
         draggingImageIndex = i;
-        dragOffset = { x: startX - x, y: startY - y };
+        dragOffset = { x: e.clientX - x, y: e.clientY - y };
         mouseDown = true;
         return;
       }
