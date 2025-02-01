@@ -3,45 +3,57 @@ import React, { useState, useEffect } from "react"
 import { ReactComponent as TagActive } from "../assets/tagActive.svg";
 import "../assets/styles.css";
 
-
-function Tag({ nouns }) {
-    return (
-      <div className="tag-container">
-        {/* 최대 3개의 TagActive를 렌더링 */}
-        {nouns.slice(0, 3).map((noun, index) => (
-          <div key={index} className="tag-item">
-            {/* TagActive SVG */}
-            <TagActive className="tag" />
-            {/* Tag 위에 명사 텍스트 렌더링 */}
-            <span className="noun-text">{noun}</span>
-          </div>
-        ))}
-      </div>
-    );
-  }
+function Tag({ nouns, onImagesSelected }) {
+  const [hoveredNoun, setHoveredNoun] = useState(null); // 현재 hover 중인 명사
   
-  export default Tag;
 
+  return (
+    <div className="tag-container">
+      {nouns.map(({ noun, images }, index) => (
+        <div
+          key={index}
+          className="tag-item"
+          onMouseEnter={() => setHoveredNoun(noun)}
+          onMouseLeave={() => setHoveredNoun(null)}
+        >
+          <TagActive className="tag" />
+          <span className="noun-text">{noun}</span>
 
+        
+          {hoveredNoun === noun && images.length > 0 && (
+            <div className="image-dropdown">
+              {images.map((image, imgIndex) => (
+                <img
+                  key={imgIndex}
+                  src={`http://localhost:5000/${image}`}
+                  alt={noun}
+                  className="dropdown-image"
+                  onClick={() => onImagesSelected(`http://localhost:5000/${image}`)} // 이미지 선택 시 부모 컴포넌트에 전달
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
+export default Tag;
 
 
 // function Tag({ nouns }) {
 //     return (
-//       <div>
-//         <TagActive className="tag" />
-//         {/* 명사 리스트를 화면에 렌더링 */}
-//         <div>
-//           {nouns.length > 0 ? (
-//             nouns.map((noun, index) => (
-//               <span key={index} className="noun-tag">
-//                 {noun}
-//               </span>
-//             ))
-//           ) : (
-//             <p>명사를 찾을 수 없습니다.</p>
-//           )}
-//         </div>
+//       <div className="tag-container">
+        
+//         {nouns.slice(0, 10).map((noun, index) => (
+//           <div key={index} className="tag-item">
+            
+//             <TagActive className="tag" />
+            
+//             <span className="noun-text">{noun}</span>
+//           </div>
+//         ))}
 //       </div>
 //     );
 //   }
