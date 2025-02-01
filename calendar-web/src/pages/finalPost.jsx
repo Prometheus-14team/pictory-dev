@@ -1,22 +1,17 @@
-//finalPost 페이지
-import React from "react";
-import finalPostComponent from "../components/Post/finalPost";
-
-
+import React from 'react';
+import { format } from "date-fns";
+import FinalPostComponent from "../components/Post/finalPost"; // Post.jsx 호출
 import "../components/assets/styles.css";
-import img from "../components/img";
 
-function finalPost() {
-    // 재생성 버튼 기능 추가
-    // current date 기능
-    // DB에서 가져올 것: content, 재생성
-  return (
-    <div>
-      <finalPostComponent />
-      <p>final post 페이지 랜더링</p>
-    </div>
+function FinalPost({ currentDate }) {
+    // 만약 currentDate가 전달되지 않으면, 날짜를 계산
+    const formattedDate = currentDate || format(new Date(), "yyyy-MM-dd");
 
-  );
+    return (
+        <div>
+            <FinalPostComponent currentDate={formattedDate} />
+        </div>
+    );
 }
 
-export default finalPost;
+export default FinalPost;

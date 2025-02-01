@@ -7,31 +7,38 @@ import polygon3 from "../assets/img/Polygon 3.png";
 import pictorysmall from "../assets/img/PICTORYsmall.png";
 import misc from "../assets/img/GoInput-inactive.png";
 import vector from "../assets/img/Vector.png";
+import group29 from "../assets/img/Group 29.png";
+import { ko } from "date-fns/locale";
 
 function CalendarHeader({ currentDate, onNext, onPrev }) {
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className="header-wrapper">
-      <div className="text-wrapper-5">날짜를 선택해주세요</div>
-      
-      <div>
+      <div className="calendar-img"
+        style={{position:"absolute", left:"21vw", top: "8vh"}}>
+        <img src={group29} style={{width:"15vw", height:"auto"}}/>
+      </div>
+      <div className="calendar-head">
         <img
           className="polygon"
           alt="Polygon"
           src={polygon2}
           onClick={onPrev}
+          style={{marginRight:"1vw"}}
         />
-        <span className="text-wrapper-6">
-          {format(currentDate, "MMMM yyyy")}
+        <span className="text-wrapper-6"
+          style={{ position: "relative", top: "-2px" }}>
+          {format(currentDate, "yyyy년 MMMM", { locale: ko })}
         </span>
         <img
           className="polygon-2"
           alt="Polygon"
           src={polygon3}
           onClick={onNext}
+          style={{marginLeft:"1vw"}}
         />
-      </div>
-      <div className="link-wrapper">
+        </div>
+        <div className="logo-head">
         <Link to="/">
           <img className="group-2" alt="Group" src={pictorysmall} />
         </Link>
@@ -45,23 +52,24 @@ function CalendarHeader({ currentDate, onNext, onPrev }) {
               className="misc"
               alt="Misc"
               src={misc}
-              style={{ position: "relative", marginRight: "10vw" }}
             />
-          </Link>
-          {isHovered && (
+                      {isHovered && (
             <img
               src={vector}
               style={{
                 position: "absolute",
-                right: "10vw",
+                right: "1vw",
                 width: "3vw",
+                top: "4vw",
                 pointerEvents: "none",
+                zIndex: 12
               }}
             />
           )}
+          </Link>
+          </div>
         </div>
       </div>
-    </div>
   );
 }
 

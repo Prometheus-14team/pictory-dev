@@ -1,15 +1,39 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 main {
   background-color: #ffffff;
-  height: 1080px;
   position: relative;
-  width: 1920px;
+  display: flex;
+  overflow: hidden;
 }
 
 main .overlap {
   display: flex;
-  flex-direction: row;  /* 세로로 배치 */
   height: 100vh;  /* 부모 컨테이너의 전체 높이 */
-  position: relative;
+  flex: 3;
+}
+
+main .list {
+  flex: 1; 
+  display: flex;
+  height: 100%;
+  overflow: auto;
+}
+
+.image-container {
+  display: flex;
+  height: 100vh;
+  margin-left: 57vw;
+}
+
+.image-container img {
+  height: 100%;  
+  position: absolute;
+  top: 0;
 }
 
 main .div {
@@ -83,35 +107,44 @@ main .text-wrapper-2{
   position: absolute;
   text-align: center;
   top: 31px;
+
 }
 
 .calendar-container {
+  height: 2vw;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  padding-top: 20px;
+  font-weight: bold;
+  font-family: Pretendard Regular;  
+  font-size: 34px;
+  gap: 3vw;
+  margin-top: -42vw;
+  margin-left: -42vw;
 }
 
 .week-days {
+  color: #000;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 50px;
+  gap: 4.98vw;
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 0;
+  font-family: Pretendard;
+  font-size: 28px;
+  font-weight: 700;
 }
 
-.calendar-date-instance {
-  flex: 0 0 auto !important;
-  gap: 17.87px !important;
+.calendar-date-instance{
+  filter: opacity(0.4)
 }
 
 .design-component-instance-node {
   display: flex;
+  color: #3F6262;
   top: 20px;
   justify-content: center; 
   align-items: center;
-  background-color: #FADF9E;
   border-radius: 53.6px;
   height: 107.2px;
   width: 107.2px;
@@ -119,20 +152,13 @@ main .text-wrapper-2{
 
 .navbar {
   display: grid;
+  color: #3F6262;
   grid-template-columns: repeat(7, 1fr);
-  gap: 50px;
+  gap: 4.17vw;
 }
 
-main.element {
-  font-family: "Pretendard-Bold", Helvetica;
-  font-size: 34px;
-  font-weight: 700;
-  left: 42px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  text-align: center;
-  top: 31px;
+.element {
+  pointer-events: auto; /* 클릭 허용 */
 }
 
 main .text-wrapper {
@@ -149,29 +175,26 @@ main .text-wrapper {
 /* Calendar Header*/
 .header-wrapper {
   display: flex;
-  flex-direction: column;  /* 세로 방향으로 정렬 */
-  align-items: center;  /* 수평 중앙 정렬 */
-  justify-content: flex-start;  /* 수직 중앙 정렬 */
-  height: 100vh;  /* 화면 전체 높이 사용 */
+  height: 100vh; 
 }
 
-/* 날짜 텍스트 */
-.text-wrapper-5 {
-  color: #000000;
-  font-family: "Pretendard-SemiBold", Helvetica;
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: normal;
-  position: relative;
-  margin-bottom: 10px;  /* 텍스트와 다른 요소들 간의 간격 */
+.calendar-head{
+  display: flex;
+  height: 100vh; 
+  margin-top: 10vw;
+  margin-left: 23vw;
+}
+
+.logo-head{
+  display: flex;
+  margin-left: -23vw;
 }
 
 /* 월/연도 텍스트 */
 .text-wrapper-6 {
   color: #000000;
-  font-family: "Pretendard-SemiBold", Helvetica;
-  font-size: 28px;
+  font-family: Pretendard;
+  font-size: 1.3vw;
   font-weight: 600;
   letter-spacing: 0;
   line-height: normal;
@@ -180,6 +203,7 @@ main .text-wrapper {
 
 /* 왼쪽 화살표 */
 .polygon {
+  z-index: 10;
   height: 31px;
   width: 24px;
 }
@@ -188,6 +212,7 @@ main .text-wrapper {
 .polygon-2 {
   height: 31px;
   width: 24px;
+  z-index: 10;
 }
 
 /* link-wrapper 부모 요소 (pictorysmall, misc 이미지 포함) */
@@ -206,15 +231,18 @@ main .text-wrapper {
 .group-2 {
   height: 59px;
   width: 235px;
-  margin-left: -50px;
+  margin-left: -8vw;
+  margin-top: 1vw;
 }
 
 /* misc 이미지 */
 .misc {
+  position: relative;
+  margin-top: 4vw;
+  margin-left: 41vw;
   height: 51px;
-  width: 51px;
   object-fit: contain;  /* 이미지 비율 유지 */
-  /*margin-right: -100px;*/
+  z-index: 10;
 }
 
 .calendar {
@@ -302,8 +330,8 @@ main .text-wrapper {
   width: 100%;
   padding: 20px;
   max-width: 1000px;
-  flex: 1;
 }
+
 .list-item {
   width: 480px;
   font-family: Pretendard Regular;
@@ -559,13 +587,20 @@ font-family: 'Poppins';
 /*List 부분*/
 
 .sidebar {
+  font-family: "Pretendard Regular"; 
   background-color: #ffffff;
   height: 1080px;
-  position: relative;
+  position: absolute;
   width: 664px;
+  margin-top: -110vh;
+  margin-left: 62vw;
 }
 
-
+.image-list {
+  margin-top: 0;
+  margin-right: 3vw;
+  z-index: 100;
+}
 
 .sidebar .overlap-group {
   border: 1.25px solid;
@@ -573,30 +608,39 @@ font-family: 'Poppins';
   border-radius: 44px;
   height: 207px;
   position: relative;
-  width: 641px;
+  width: 34vw;
+  margin-bottom: 1.7vh;
+}
+
+.over-text{
+  position: relative;
+  font-size: 34px;
+  font-style: bold;
+  font-weight: 600;
+  left: 6vw;
+  top: 4vh;
 }
 
 .sidebar .text-wrapper {
   color: #000000;
-  font-family: "Pretendard-SemiBold", Helvetica;
   font-weight: 600;
+  font-size: 2vw;
   left: 122px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 46px;
+  top: 44px;
 }
 
 .sidebar .div {
   color: #000000;
-  font-family: "Pretendard-SemiBold", Helvetica;
   font-size: 18px;
   font-weight: 400;
   left: 122px;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 115px;
+  top: 5vw;
 }
 
 .sidebar .ellipse {
@@ -612,7 +656,7 @@ font-family: 'Poppins';
 .sidebar .group-wrapper {
   background-color: #e2f5f5;
   height: 164px;
-  left: 424px;
+  left: 24vw;
   position: absolute;
   top: 21px;
   width: 164px;
@@ -686,6 +730,7 @@ html, body {
 }
 
 .back {
+  z-index: 10;
   height: 66px;
   width: 68px;
   background-color: #476161;
@@ -717,10 +762,39 @@ html, body {
 }
 
 .weather{
-  position: relative;
-  gap: 2vw;
-  top: 22vh;
+  display: flex;
+  position: absolute;
+  left: 31vw;
+  top: 11.5vh;
   z-index: 100;
+  gap: 1.5vw;
+}
+
+.face{
+  display: flex;
+  position: absolute;
+  left: 18.7vw;
+  top: 11.5vh;
+  z-index: 100;
+  gap: 1.2vw;
+}
+
+.weather2{
+  display: flex;
+  position: absolute;
+  left: 67vw;
+  top: 7vh;
+  z-index: 100;
+  gap: 2.5vw;
+}
+
+.face2{
+  display: flex;
+  position: absolute;
+  left: 44.5vw;
+  top: 7vh;
+  z-index: 100;
+  gap: 2.5vw;
 }
 
 .textbox { /*text-box-form과 user-id-input의 부모요소*/
@@ -743,8 +817,8 @@ html, body {
 
 .post-submit{
   position: relative;
-  left: 18vw;
-  top: 5vh;
+  left: 19vw;
+  top: -6vh;
 }
 
 .user-id-input{
@@ -819,5 +893,51 @@ html, body {
   font-weight: bold;
   color: #000;
   pointer-events: none; /* 텍스트 클릭 방지 */
+  white-space: nowrap;
+}
+
+.postsmall{
+  position: absolute;
+  height: 59px;
+  width: 235px;
+  margin-left: 2vw;
+  margin-top: 1vw;
+}
+
+.cloud2{
+  position: relative;
+  top: 58vh;
+}
+
+.Group13{
+  position: relative;
+  left: 30vw;
+  top: -11vh;
+}
+
+.smile{
+  left: 75vw;
+  top: 68vh;
+}
+
+.diary{
+  position: relative;
+  width: 70vw;
+  left: 15vw;
+  top: -38vh;
+  z-index: 20;
+}
+
+.di-text{
+  position: relative;
+  fill: #000;
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 0.96px;
+  z-index: 100;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
+  top: 13vh;
   white-space: nowrap;
 }
