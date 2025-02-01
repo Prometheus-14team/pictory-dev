@@ -21,10 +21,10 @@ function Post() {
   const [draggingImageIndex, setDraggingImageIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [mouseDown, setMouseDown] = useState(false);
+  const [resizeMode, setResizeMode] = useState(false);
 
   const handleChange = (e) => setText(e.target.value);
   const handleReset = () => {setText('');};
-
 
   // 서버로 데이터 전송 (POST 요청)
   const handleSubmit = async (event) => {
@@ -73,130 +73,131 @@ function Post() {
     }
   };
 
-  
-  
-  
-  const drawCanvas = (imageUrl) => {
+  const drawCanvas = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    if(!canvas) {
-      console.error("캔버스 not found");
-      return;
-    }
-
-    const ctx = canvas.getContext("2d"); // 여기를 src위에다..
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     canvasImages.forEach((imageUrl, index) => {
+      const { x, y } = imgPos[index];
+      const { width, height } = imgSize[index];
+
       const img = new Image();
       img.src = imageUrl;
       img.onload = () => {
-        const { x, y } = imgPos[index];
-        const { width, height } = imgSize[index];
-        ctx.drawImage(img, x, y, width, height); 
+        ctx.drawImage(img, x, y, width, height);
+
+        // 크기 조절 핸들 그리기
+        const handleSize = 10; // 핸들의 크기
+        ctx.fillStyle = "red"; // 핸들의 색
+        ctx.fillRect(x + width - handleSize, y + height - handleSize, handleSize, handleSize);
       };
     });
   };
-  
-  
+
   const onImagesSelected = (imageUrl) => {
     setCanvasImages((prev) => [...prev, imageUrl]);
     setImgPos((prev) => [...prev, { x: 50 + prev.length * 220, y: 50 }]);
     setImgSize((prev) => [...prev, { width: 200, height: 200 }]);
   };
-  
-  const handleMouseDown = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+
+  // 크기 조절 핸들 드래그 시작
+  const handleMouseDownResize = (e) => {
     const canvas = canvasRef.current;
     const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
-    const winScrollTop = window.scrollY;
-  
     const startX = e.clientX - offset.x;
-    const startY = e.clientY - offset.y + winScrollTop;
-  
+    const startY = e.clientY - offset.y;
+
+    // 크기 조절 핸들 클릭 체크
     for (let i = canvasImages.length - 1; i >= 0; i--) {
       const { x, y } = imgPos[i];
       const { width, height } = imgSize[i];
-  
+      const handleSize = 10; // 핸들의 크기
+
+      // 크기 조절 핸들이 클릭된 경우
       if (
-        startX >= x && startX <= x + width &&
-        startY >= y && startY <= y + height
+        startX >= x + width - handleSize &&
+        startX <= x + width &&
+        startY >= y + height - handleSize &&
+        startY <= y + height
       ) {
         setDraggingImageIndex(i);
-        setDragOffset({ x: startX - x, y: startY - y });
+        setResizeMode(true); // 크기 조절 모드 활성화
         setMouseDown(true);
         return;
       }
     }
   };
-  
-  const handleMouseMove = (e) => {
-    e.preventDefault();
-    if (mouseDown && draggingImageIndex !== null) {
+
+  // 크기 조절 핸들 드래그
+  const handleMouseMoveResize = (e) => {
+    if (mouseDown && draggingImageIndex !== null && resizeMode) {
       const canvas = canvasRef.current;
       const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
       const winScrollTop = window.scrollY;
-  
+
       const mouseX = e.clientX - offset.x;
       const mouseY = e.clientY - offset.y + winScrollTop;
-  
-      const dx = mouseX - dragOffset.x;
-      const dy = mouseY - dragOffset.y;
-  
-      setImgPos((prev) =>
-        prev.map((pos, index) =>
-          index === draggingImageIndex ? { x: dx, y: dy } : pos
+
+      const { x, y } = imgPos[draggingImageIndex];
+      const width = mouseX - x;
+      const height = mouseY - y;
+
+      setImgSize((prev) =>
+        prev.map((size, index) =>
+          index === draggingImageIndex ? { width, height } : size
         )
       );
     }
   };
-  
+
   const handleMouseUp = () => {
     setMouseDown(false);
     setDraggingImageIndex(null);
+    setResizeMode(false); // 크기 조절 모드 종료
   };
-  
+
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMoveResize);
     window.addEventListener("mouseup", handleMouseUp);
-  
+
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMoveResize);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [mouseDown, draggingImageIndex, dragOffset]);
+  }, [mouseDown, draggingImageIndex, resizeMode]);
 
   // 캔버스 이벤트 리스너 등록
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    canvas.addEventListener("mousedown", handleMouseDown);
-    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mousedown", handleMouseDownResize);
+    canvas.addEventListener("mousemove", handleMouseMoveResize);
     canvas.addEventListener("mouseup", handleMouseUp);
 
     return () => {
-      canvas.removeEventListener("mousedown", handleMouseDown);
-      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mousedown", handleMouseDownResize);
+      canvas.removeEventListener("mousemove", handleMouseMoveResize);
       canvas.removeEventListener("mouseup", handleMouseUp);
     };
   }, [canvasImages, imgPos, imgSize]);
-    
+
   // 캔버스가 업데이트될 때마다
   useEffect(() => {
     drawCanvas();
-  }, [canvasImages, imgPos, imgSize]); 
-  
+  }, [canvasImages, imgPos, imgSize]);
+
   // POST 요청 후에만
   useEffect(() => {
     if (isPostSubmitted) {
       fetchNouns();
       setIsPostSubmitted(false); 
     }
-  }, [isPostSubmitted]); 
-  
-  
+  }, [isPostSubmitted]);
+
   return (
     <div>
       <PostComponent
