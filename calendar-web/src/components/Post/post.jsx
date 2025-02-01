@@ -3,7 +3,6 @@ import React, { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom";
 
 import "../assets/styles.css";
-import  postLayer  from "../assets/post.svg";
 import { ReactComponent as PostLayer } from "../assets/post.svg";
 
 import PostSubmit from "./postsubmit";

@@ -755,9 +755,9 @@ html, body {
 }
 
 .post-layer {
-  width: 92vw;
+  width: 40vw;
   position: relative;
-  left: 25vw;
+  left: 26.5vw;
   top: 10vh;
 }
 
@@ -801,7 +801,7 @@ html, body {
   position: relative;
   width: 52vw;
   top: 45vh;
-  left: -2vw;
+  left: 27vw;
 }
 
 .text-input {
@@ -843,9 +843,9 @@ html, body {
   font-weight: 600;
   line-height: normal;
   letter-spacing: 0.96px;
-  z-index: 10;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
+  z-index: 100;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
   top: 13vh;
-  left: -37vw;
+  left: -9vw;
   white-space: nowrap;
 }
 

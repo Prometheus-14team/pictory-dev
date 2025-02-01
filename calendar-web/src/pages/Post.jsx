@@ -132,7 +132,12 @@ function Post() {
       ) : (
         <TagComponent nouns={nouns} onImagesSelected={onImagesSelected} />
       )}
-      <canvas ref={canvasRef} width="400" height="400" style={{ border: "1px solid black" }} />
+      <canvas 
+        ref={canvasRef} 
+        width="895" 
+        height="555" 
+        style={{ position:"relative", left:"4.2vw", top:"-76vh"}} 
+      />
     </div>
   );
 }
