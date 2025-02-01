@@ -153,6 +153,50 @@ function Post() {
     }
   };
 
+  // 위치 조정 (드래그 시작)
+  const handleMouseDown = (e) => {
+    const canvas = canvasRef.current;
+    const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
+    const winScrollTop = window.scrollY;
+
+    const startX = e.clientX - offset.x;
+    const startY = e.clientY - offset.y + winScrollTop;
+
+    for (let i = canvasImages.length - 1; i >= 0; i--) {
+      const { x, y } = imgPos[i];
+      const { width, height } = imgSize[i];
+
+      if (startX >= x && startX <= x + width && startY >= y && startY <= y + height) {
+        setDraggingImageIndex(i);
+        setDragOffset({ x: startX - x, y: startY - y });
+        setMouseDown(true);
+        return;
+      }
+    }
+  };
+
+  // 위치 이동 (드래그)
+  const handleMouseMove = (e) => {
+    e.preventDefault();
+    if (mouseDown && draggingImageIndex !== null && !resizeMode) {
+      const canvas = canvasRef.current;
+      const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
+      const winScrollTop = window.scrollY;
+
+      const mouseX = e.clientX - offset.x;
+      const mouseY = e.clientY - offset.y + winScrollTop;
+
+      const dx = mouseX - dragOffset.x;
+      const dy = mouseY - dragOffset.y;
+
+      setImgPos((prev) =>
+        prev.map((pos, index) =>
+          index === draggingImageIndex ? { x: dx, y: dy } : pos
+        )
+      );
+    }
+  };
+
   const handleMouseUp = () => {
     setMouseDown(false);
     setDraggingImageIndex(null);
@@ -160,10 +204,12 @@ function Post() {
   };
 
   useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mousemove", handleMouseMoveResize);
     window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousemove", handleMouseMoveResize);
       window.removeEventListener("mouseup", handleMouseUp);
     };
@@ -175,12 +221,16 @@ function Post() {
     if (!canvas) return;
 
     canvas.addEventListener("mousedown", handleMouseDownResize);
+    canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMoveResize);
+    canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
 
     return () => {
       canvas.removeEventListener("mousedown", handleMouseDownResize);
+      canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMoveResize);
+      canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
     };
   }, [canvasImages, imgPos, imgSize]);
@@ -189,6 +239,7 @@ function Post() {
   useEffect(() => {
     drawCanvas();
   }, [canvasImages, imgPos, imgSize]);
+
 
   // POST 요청 후에만
   useEffect(() => {
