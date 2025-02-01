@@ -1,4 +1,3 @@
-/* Post page */
 import React, { useState, useEffect, useRef } from 'react';
 import { format } from "date-fns";
 import PostComponent from "../components/Post/post"; // Post.jsx 호출
@@ -19,9 +18,9 @@ function Post() {
   const formRef = useRef(null); 
   const canvasRef = useRef(null);
 
-  let mouseDown = false;
-  let draggingImageIndex = null;
-  let dragOffset = { x: 0, y: 0 };
+  const [draggingImageIndex, setDraggingImageIndex] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [mouseDown, setMouseDown] = useState(false);
 
   const handleChange = (e) => setText(e.target.value);
   const handleReset = () => {setText('');};
@@ -106,52 +105,67 @@ function Post() {
     setImgSize((prev) => [...prev, { width: 200, height: 200 }]);
   };
   
-  // 마우스 이벤트 핸들러
   const handleMouseDown = (e) => {
     e.preventDefault();
     e.stopPropagation();
     const canvas = canvasRef.current;
     const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
     const winScrollTop = window.scrollY;
+  
     const startX = e.clientX - offset.x;
     const startY = e.clientY - offset.y + winScrollTop;
-
+  
     for (let i = canvasImages.length - 1; i >= 0; i--) {
       const { x, y } = imgPos[i];
       const { width, height } = imgSize[i];
-
-      if (startX >= x && startX <= x + width && startY >= y && startY <= y + height) {
-        draggingImageIndex = i;
-        dragOffset = { x: e.clientX - x, y: e.clientY - y };
-        mouseDown = true;
+  
+      if (
+        startX >= x && startX <= x + width &&
+        startY >= y && startY <= y + height
+      ) {
+        setDraggingImageIndex(i);
+        setDragOffset({ x: startX - x, y: startY - y });
+        setMouseDown(true);
         return;
       }
     }
   };
-
+  
   const handleMouseMove = (e) => {
     e.preventDefault();
     if (mouseDown && draggingImageIndex !== null) {
       const canvas = canvasRef.current;
       const offset = { x: canvas.offsetLeft, y: canvas.offsetTop };
       const winScrollTop = window.scrollY;
+  
       const mouseX = e.clientX - offset.x;
       const mouseY = e.clientY - offset.y + winScrollTop;
-
-      setImgPos((prev) => {
-        const newPos = [...prev];
-        newPos[draggingImageIndex] = { x: mouseX - dragOffset.x, y: mouseY - dragOffset.y };
-        return newPos;
-      });
-
-      drawCanvas();
+  
+      const dx = mouseX - dragOffset.x;
+      const dy = mouseY - dragOffset.y;
+  
+      setImgPos((prev) =>
+        prev.map((pos, index) =>
+          index === draggingImageIndex ? { x: dx, y: dy } : pos
+        )
+      );
     }
   };
-
+  
   const handleMouseUp = () => {
-    mouseDown = false;
-    draggingImageIndex = null;
+    setMouseDown(false);
+    setDraggingImageIndex(null);
   };
+  
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [mouseDown, draggingImageIndex, dragOffset]);
 
   // 캔버스 이벤트 리스너 등록
   useEffect(() => {
@@ -183,7 +197,6 @@ function Post() {
   }, [isPostSubmitted]); 
   
   
-
   return (
     <div>
       <PostComponent
