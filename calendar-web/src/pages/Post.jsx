@@ -110,8 +110,6 @@ function Post() {
 
   const handleMouseDown = (e) => {
     const { offsetX, offsetY } = e.nativeEvent || {}; //기본 객체로 대체
-    
-
     // 클릭한 이미지 찾기 (역순 탐색: 가장 위의 이미지 먼저 선택)
     for (let i = canvasImages.length - 1; i >= 0; i--) {
       const { x, y } = imgPos[i];

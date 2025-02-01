@@ -50,6 +50,7 @@ function Post({
         <Link to="/calendar">
           <img src={backButton} alt="backButton" className="back-img" />
         </Link>
+        
       </div>
       <div className="face">
         {/* Smile */}
