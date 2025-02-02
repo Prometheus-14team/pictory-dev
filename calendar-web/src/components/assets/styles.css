@@ -816,10 +816,27 @@ html, body {
   z-index: 10;
 }
 
+.text-small {
+  all: unset;
+  position: relative;
+  left: 31vw;
+  top: 84vh;
+  font-size: 22px;
+  font-style: bold;
+  font-family: Pretendard;
+  z-index: 10;
+}
+
 .post-submit{
   position: relative;
   left: 19vw;
   top: -6vh;
+}
+
+.textsmall{
+  position: absolute;
+  left: 50vw;
+  top: 84vh;
 }
 
 .user-id-input{
@@ -862,8 +879,11 @@ html, body {
 /* 임시임 */
 /* 전체 태그 컨테이너 */
 .tag-container {
-  display: flex;
-  gap: 20px; /* 태그 간 간격 */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2vw, 1fr)); /* 각 태그의 최소 너비를 200px로 설정 */
+  flex-wrap: wrap;
+  max-height: 20vh;
+  gap: 4vw; /* 태그 간 간격 */
   position: relative;
   left: 50vw;
   top: 10vh;

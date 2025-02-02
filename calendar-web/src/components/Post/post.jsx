@@ -6,6 +6,7 @@ import "../assets/styles.css";
 import { ReactComponent as PostLayer } from "../assets/post.svg";
 
 import PostSubmit from "./postsubmit";
+import PostSubmit2 from "./postsubmit";
 import t from "../assets/img/Text.png";
 import backButton from "../assets/img/backButton.png";
 import Sun from "../assets/img/Sun.png";
@@ -22,6 +23,7 @@ import cloudb from "../assets/img/cloudb.png";
 import rainb from "../assets/img/rainb.png";
 import group38 from "../assets/img/Group 38.png";
 import textsmall from "../assets/img/textsmall.png";
+import component3 from "../assets/img/Component 3.png";
 
 function Post({ 
   currentDate,
@@ -238,14 +240,17 @@ function Post({
       {/* showGroup38 상태가 true면 Group38 이미지 렌더링 */}
       {showGroup38 && (
         <div className="group38-container">
-          <img src={group38} alt="Group38" style={{position:"relative", top: "-2vh", left:"20vw", width: "10vw" }} />
-          <img src={textsmall} style={{ width: "45vw" }} alt="text decoration" />
-                <textarea
+          <img src={group38} alt="Group38" style={{position:"relative", left:"58vw", top:"80vh"}}/>
+          <form ref={formRef} onSubmit={handlePostSubmit}>
+            <img src={textsmall} style={{ width: "45vw" }} className="textsmall" />
+            <textarea
                   value={text}
                   onChange={handleChange}
-                  className="text-input"
+                  className="text-small"
                   placeholder="검색"
                 />
+          </form>
+          <img src={component3} style={{ width: "3vw", left: "91vw", top:"80vh" }} className="textsmall" />
         </div>
       )}
     </div>
