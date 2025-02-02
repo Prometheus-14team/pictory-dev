@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';  // 페이지 이동을 위해 추가
 import { format } from "date-fns";
-import PostComponent from "../components/Post/post"; // Post.jsx 호출
-import TagComponent from "../components/Post/Tag"; // Post.jsx 호출
+import PostComponent from "../components/Post/post"; 
+import TagComponent from "../components/Post/Tag"; 
 import "../components/assets/styles.css";
 
 
@@ -22,6 +23,8 @@ function Post() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [mouseDown, setMouseDown] = useState(false);
   const [resizeMode, setResizeMode] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => setText(e.target.value);
   const handleReset = () => {setText('');};
@@ -50,6 +53,8 @@ function Post() {
   };
 
   const handleCaptureAndSubmit = async () => {
+    setIsLoading(true);  
+
     const canvas = canvasRef.current;
     if (!canvas) return;
   
@@ -69,12 +74,18 @@ function Post() {
   
       if (response.ok) {
         alert('이미지 전송 성공!');
+        // 이미지 전송 후 finalPost 페이지로 이동
+        setTimeout(() => {
+          navigate('/finalPost');  // 페이지 이동
+        }, 1500);  // 1.5초 후에 이동 (로딩 효과를 보여주기 위해)
       } else {
         alert('이미지 전송 실패. 다시 시도해주세요.');
       }
     } catch (error) {
       console.error('서버 전송 중 오류 발생:', error);
       alert('서버 전송 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);  // 로딩 끝
     }
   };
 
@@ -123,7 +134,7 @@ function Post() {
 
         
         const handleSize = 10; 
-        ctx.fillStyle = "red"; 
+        ctx.fillStyle = "red"; // 점선이나 canvas 캡쳐 시에는
         ctx.fillRect(x + width - handleSize, y + height - handleSize, handleSize, handleSize);
       };
       

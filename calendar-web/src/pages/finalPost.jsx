@@ -24,9 +24,13 @@ function finalPost({currentDate}) {
     // 재생성 버튼 기능 추가
     // current date 기능
     // DB에서 가져올 것: content, 재생성
+
+
+
+
   return (
     <div>
-        <Link to="/post">
+        <Link to="/calendar">
           <img className="postsmall" alt="Group" src={pictorysmall} />
         </Link>
         <img className="cloud2" alt="Group" src={cloud2} />
@@ -47,7 +51,9 @@ function finalPost({currentDate}) {
               {currentDate} 
           </text>
         <img className="rectangle58" alt="Group" src={rectangle58} />
-        <img className="write" alt="Group" src={write} />
+        <Link to={`/post/${currentDate}`}>
+          <img className="write" alt="Group" src={write} /> 
+        </Link>
         <img className="music" alt="Group" src={music} />
         <img className="photo" alt="Group" src={photo} />
 

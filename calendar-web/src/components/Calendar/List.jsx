@@ -5,6 +5,9 @@ import "../assets/styles.css";
 import group28 from "../assets/img/Group 28.png";
 
 function List() {
+
+  
+
   return (
     <div className="sidebar">
       <div style={{position:"absolute", top: "-13vh"}}>

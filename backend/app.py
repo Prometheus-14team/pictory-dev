@@ -115,6 +115,7 @@ def get_all():
     return jsonify({"all": sorted([diary.to_dict() for diary in diaries], key=lambda x: x["date"])})
 
 
+# 유저가 만든 canvas이미지 보내기
 @app.route("/POST/image/<date>", methods=["POST"])
 def post_image(date):
         
