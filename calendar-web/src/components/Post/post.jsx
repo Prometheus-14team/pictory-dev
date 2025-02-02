@@ -21,6 +21,7 @@ import sunb from "../assets/img/sunb.png";
 import cloudb from "../assets/img/cloudb.png";
 import rainb from "../assets/img/rainb.png";
 import group38 from "../assets/img/Group 38.png";
+import textsmall from "../assets/img/textsmall.png";
 
 function Post({ 
   currentDate,
@@ -237,7 +238,14 @@ function Post({
       {/* showGroup38 상태가 true면 Group38 이미지 렌더링 */}
       {showGroup38 && (
         <div className="group38-container">
-          <img src={group38} alt="Group38" style={{ position:"relative",top: "-2vh", left:"20vw",width: "10vw" }} />
+          <img src={group38} alt="Group38" style={{position:"relative", top: "-2vh", left:"20vw", width: "10vw" }} />
+          <img src={textsmall} style={{ width: "45vw" }} alt="text decoration" />
+                <textarea
+                  value={text}
+                  onChange={handleChange}
+                  className="text-input"
+                  placeholder="검색"
+                />
         </div>
       )}
     </div>

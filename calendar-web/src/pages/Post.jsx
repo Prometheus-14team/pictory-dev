@@ -268,7 +268,7 @@ function Post() {
         ref={canvasRef} 
         width="895" 
         height="555" 
-        style={{ position:"relative", left:"4.2vw", top:"-76vh"}} 
+        style={{ position:"absolute", left:"4.2vw", top:"18vh"}} 
       />
     </div>
   );
