@@ -1,5 +1,6 @@
 import torch
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+
+from transformers import AutoTokenizer, AutoModelForCausalLM
 
 
 HF_TOKEN = ""
@@ -12,11 +13,11 @@ class LLM():
             model_path,
             token=HF_TOKEN
         )
-        self.model = AutoModelForSeq2SeqLM.from_pretrained(
+        self.model = AutoModelForCausalLM.from_pretrained(
             model_path,
-            torch_dtype=torch.bfloat16,
+            torch_dtype=torch.float16,
             load_in_8bit=True,
-            attn_implementation="flash_attention_2",
+            attn_implementation="eager",
             device_map=device,
             token=HF_TOKEN
         )
@@ -52,7 +53,7 @@ class LLM():
         """.strip().replace("    ", "")
 
     @torch.inference_mode()
-    def summarize(self, text, max_length=30):
+    def summarize(self, text):
         # 입력 데이터 준비
         prompt = self.summarizarion_prompt.format(text=text)
         inputs = self.tokenizer(
@@ -63,15 +64,15 @@ class LLM():
         
         # 요약문 생성
         outputs = self.model.generate(
-            **inputs, 
-            max_length=max_length,
-            length_penalty=2.0, 
-            early_stopping=True
+            **inputs,
+            max_new_tokens=100,
+            length_penalty=2.0,
+            num_beams=4
         )
         summary = self.tokenizer.decode(
             outputs[0],
             skip_special_tokens=True
-        ).split("summary:")[-1]
+        ).split("summary:")[-1].strip()
         return summary
 
     @torch.inference_mode()
@@ -87,10 +88,11 @@ class LLM():
         # 번역문 생성
         outputs = self.model.generate(
             **inputs,
-            early_stopping=True
+            max_new_tokens=100,
+            num_beams=4
         )
         translation = self.tokenizer.decode(
             outputs[0],
             skip_special_tokens=True
-        ).split("translation:")[-1]
+        ).split("translation:")[-1].strip()
         return translation
