@@ -112,6 +112,10 @@ def get_drawing_tag(date):
 @app.route("/GET/all", methods=["GET"])
 def get_all():
     diaries = Diary.query.all()
+    
+    if not diaries:  
+        return jsonify({"message": "No data found"}), 404
+    
     return jsonify({"all": sorted([diary.to_dict() for diary in diaries], key=lambda x: x["date"])})
 
 
