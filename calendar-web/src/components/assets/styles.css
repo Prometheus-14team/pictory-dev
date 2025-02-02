@@ -906,25 +906,25 @@ html, body {
 
 .cloud2{
   position: relative;
-  top: 58vh;
+  top: 61vh;
 }
 
 .Group13{
   position: relative;
   left: 30vw;
-  top: -11vh;
+  top: -10vh;
 }
 
 .smile{
   left: 75vw;
-  top: 68vh;
+  top: 71vh;
 }
 
 .diary{
   position: relative;
   width: 70vw;
   left: 15vw;
-  top: -38vh;
+  top: -35vh;
   z-index: 20;
 }
 
@@ -960,5 +960,32 @@ html, body {
 
 .dropdown-image{
   width: 10vw;
+}
 
+.rectangle58 {
+  position: relative;
+  margin-left: 17vw;
+  top: -101vh;
+  z-index: 100;
+}
+
+.write{
+  position: relative;
+  margin-left: 87.9vw;
+  top: -123.5vh;
+  z-index: 110;
+}
+
+.photo{
+  position: relative;
+  margin-left: 87.9vw;
+  top: -127.7vh;
+  z-index: 110;
+}
+
+.music{
+  position: relative;
+  margin-left: 87.9vw;
+  top: -115vh;
+  z-index: 110;
 }

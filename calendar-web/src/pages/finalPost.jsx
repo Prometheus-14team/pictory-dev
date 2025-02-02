@@ -14,6 +14,11 @@ import  Rain  from "../components/assets/img/Rain.png";
 import  neutral  from "../components/assets/img/NeutralFace.png";
 import  smile2  from "../components/assets/img/SmilingFace.png";
 import  sad  from "../components/assets/img/SadFace.png";
+import  rectangle58  from "../components/assets/img/Rectangle 58.png";
+import  write  from "../components/assets/img/Group 53.png";
+import  music  from "../components/assets/img/Group 54.png";
+import  photo  from "../components/assets/img/Component 6.png";
+
 
 function finalPost({currentDate}) {
     // 재생성 버튼 기능 추가
@@ -41,6 +46,11 @@ function finalPost({currentDate}) {
         <text className="di-text">
               {currentDate} 
           </text>
+        <img className="rectangle58" alt="Group" src={rectangle58} />
+        <img className="write" alt="Group" src={write} />
+        <img className="music" alt="Group" src={music} />
+        <img className="photo" alt="Group" src={photo} />
+
       <finalPostComponent />
     </div>
 
