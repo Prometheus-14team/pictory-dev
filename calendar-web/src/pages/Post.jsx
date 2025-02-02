@@ -49,6 +49,36 @@ function Post() {
     }
   };
 
+  const handleCaptureAndSubmit = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+  
+    // 캔버스 이미지를 base64 포맷으로 캡처
+    const imageData = canvas.toDataURL("sketches/png"); 
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/POST/image/${currentDate}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: imageData, 
+        }),
+      });
+  
+      if (response.ok) {
+        alert('이미지 전송 성공!');
+      } else {
+        alert('이미지 전송 실패. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('서버 전송 중 오류 발생:', error);
+      alert('서버 전송 중 오류가 발생했습니다.');
+    }
+  };
+
+
   // 명사 데이터를 서버에서 가져오기 (GET 요청)
   const fetchNouns = async () => {
     setIsLoading(true);
@@ -85,15 +115,22 @@ function Post() {
       const { width, height } = imgSize[index];
 
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.src = imageUrl;
+
       img.onload = () => {
         ctx.drawImage(img, x, y, width, height);
 
-        // 크기 조절 핸들 그리기
-        const handleSize = 10; // 핸들의 크기
-        ctx.fillStyle = "red"; // 핸들의 색
+        
+        const handleSize = 10; 
+        ctx.fillStyle = "red"; 
         ctx.fillRect(x + width - handleSize, y + height - handleSize, handleSize, handleSize);
       };
+      
+      img.onerror = () => {
+        console.error(`이미지 로드 실패: ${imageUrl}`);
+      };
+
     });
   };
 
@@ -240,6 +277,21 @@ function Post() {
     drawCanvas();
   }, [canvasImages, imgPos, imgSize]);
 
+  // 캔버스를 PNG로 다운로드
+  const handleDownloadCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    try {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png"); 
+      link.download = "canvas-image.png";
+      link.click();
+    } catch (error) {
+      console.error("다운로드 오류:", error);
+      alert("캔버스를 다운로드할 수 없습니다.");
+    }
+  };
 
   // POST 요청 후에만
   useEffect(() => {
@@ -259,11 +311,13 @@ function Post() {
         handleReset={handleReset}
         formRef={formRef}
       />
+      
       {isLoading ? (
         <p>로딩중입니다~~~~~~~~~~~~~~~~~</p>
       ) : (
         <TagComponent nouns={nouns} onImagesSelected={onImagesSelected} />
       )}
+      <button onClick={handleCaptureAndSubmit}>캔버스 이미지 전송</button>
       <canvas 
         ref={canvasRef} 
         width="895" 

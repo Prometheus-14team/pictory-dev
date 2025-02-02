@@ -4,6 +4,9 @@ import scipy
 import torch
 import numpy as np
 from PIL import Image
+import base64
+from io import BytesIO
+
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -114,19 +117,28 @@ def get_all():
 
 @app.route("/POST/image/<date>", methods=["POST"])
 def post_image(date):
-    # sketch = request.files["file"]
+        
+    data = request.get_json()  
+    image_data = data["image"]  # Base64로 인코딩된 이미지 데이터
+    
+    # Base64 데이터에서 'data:image/png;base64,' 부분을 제거하고 디코딩
+    image_data = image_data.split(",")[1]  # 'data:image/png;base64,' 부분 제거
+    sketch = Image.open(BytesIO(base64.b64decode(image_data)))  # Base64 디코딩하여 이미지로 변환
+    
+     
     # image = controlnet.generate(sketch)
 
-    # sketch_path = os.path.join("data/sketches", f"{date}.png")
+    sketch_path = os.path.join("data/sketches", f"{date}.png")
     # image_path = os.path.join("data/images", f"{date}.png")
-    # sketch.save(sketch_path)
+    sketch.save(sketch_path)
     # image.save(image_path)
 
-    # date = datetime.datetime.strptime(date, "%Y-%m-%d")
-    # diary = Diary.query.filter_by(date=date).first()
-    # diary.sketch = sketch_path
+    date = datetime.datetime.strptime(date, "%Y-%m-%d")
+    diary = Diary.query.filter_by(date=date).first()
+    diary.sketch = sketch_path
     # diary.image = image_path
-    # db.session.commit()
+    db.session.commit()
+    
     return jsonify({"message": "success"})
 
 
