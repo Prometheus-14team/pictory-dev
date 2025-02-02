@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-
+import { format } from "date-fns";
+import { ko } from "date-fns/locale"; // 한국어 로케일
 import "../assets/styles.css";
 import { ReactComponent as PostLayer } from "../assets/post.svg";
 
@@ -48,12 +49,17 @@ function Post({
   // Group38 이미지 보이기 위한 상태
   const [showGroup38, setShowGroup38] = useState(false); 
 
+  const [submitted, setSubmitted] = useState(false);
+
+  
   // PostSubmit 클릭시 그룹38 이미지를 보이도록 하고, 기존 handleSubmit 호출
   const handlePostSubmit = (e) => {
     e.preventDefault();
     setShowGroup38(true); // group38 이미지 보이게
+    setSubmitted(true);    // 제출 완료 상태로 변경 -> 입력폼, post submit 숨김
     handleSubmit(e); // 기존의 제출 처리 로직 호출
   };
+  const formattedDate = format(new Date(currentDate), "yyyy년 M월 d일 eeee", { locale: ko });
 
   return (
     <div className="container">
@@ -207,27 +213,31 @@ function Post({
       <div className="post-and-textbox">
         <PostLayer className="post-layer" />
         <text className="svg-text">
-          {currentDate} 
+          {formattedDate} 
         </text>
         <div className="textbox">
-          {/* PostSubmit 컴포넌트에 handlePostSubmit 함수를 전달 */}
-          <PostSubmit handleSubmit={handlePostSubmit} />
-          <form ref={formRef} onSubmit={handlePostSubmit}>
-            <img src={t} style={{width:"45vw"}} alt="text decoration"/>
-            <textarea
-              value={text}
-              onChange={handleChange}
-              className="text-input"
-              placeholder="텍스트를 입력하세요..."
-            />
-          </form>
+          {/* 제출 전일 때만 렌더링 */}
+          {!submitted && (
+            <>
+              <PostSubmit handleSubmit={handlePostSubmit} />
+              <form ref={formRef} onSubmit={handlePostSubmit}>
+                <img src={t} style={{ width: "45vw" }} alt="text decoration" />
+                <textarea
+                  value={text}
+                  onChange={handleChange}
+                  className="text-input"
+                  placeholder="텍스트를 입력하세요..."
+                />
+              </form>
+            </>
+          )}
         </div>
       </div>
 
       {/* showGroup38 상태가 true면 Group38 이미지 렌더링 */}
       {showGroup38 && (
         <div className="group38-container">
-          <img src={group38} alt="Group38" style={{ position:"relative",left:"20vw",width: "10vw" }} />
+          <img src={group38} alt="Group38" style={{ position:"relative",top: "-2vh", left:"20vw",width: "10vw" }} />
         </div>
       )}
     </div>

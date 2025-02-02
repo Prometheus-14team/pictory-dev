@@ -751,13 +751,13 @@ html, body {
 
 .post-and-textbox {
   display: flex; 
-  position: relative; /* 자식 요소의 위치를 상대적으로 조정 */
+  position: absolute; /* 자식 요소의 위치를 상대적으로 조정 */
 }
 
 .post-layer {
   width: 40vw;
   position: relative;
-  left: 26.5vw;
+  left: 29vw;
   top: 10vh;
 }
 
@@ -801,8 +801,9 @@ html, body {
   position: relative;
   width: 52vw;
   top: 45vh;
-  left: 27vw;
+  left: 23vw;
 }
+
 
 .text-input {
   all: unset;
@@ -865,8 +866,7 @@ html, body {
   gap: 20px; /* 태그 간 간격 */
   position: relative;
   left: 50vw;
-  top: -68vh;
-  margin-top: 20px;
+  top: 10vh;
 }
 
 /* 각 태그와 텍스트를 감싸는 컨테이너 */
