@@ -187,9 +187,15 @@ def post_text(date):
     #         summarized_text_en=summarized_text_en
     #     )
     #     db.session.add(diary)
-    # db.session.commit()
     
-    #raw_text db에 넣기
+    if diary:
+        diary.raw_text = raw_text  # 기존 데이터 업데이트
+    else:
+        diary = Diary(date=date, raw_text=raw_text)  # 새로운 데이터 생성
+        db.session.add(diary)
+    
+    db.session.commit()
+    
     
     return jsonify({"message": "success"})
 
