@@ -188,6 +188,9 @@ def post_text(date):
     #     )
     #     db.session.add(diary)
     # db.session.commit()
+    
+    #raw_text db에 넣기
+    
     return jsonify({"message": "success"})
 
 """
