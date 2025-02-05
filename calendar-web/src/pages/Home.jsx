@@ -101,7 +101,22 @@ const Home = () => {
           </p>
         </div>
       </div>
-      <div className="text-wrapper"><Link to="/calendar">Start here</Link></div>
+      <div className="text-wrapper"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}><Link to="/calendar">Start here
+        {isHovered && (
+                    <img
+                      src={border}
+                      style={{
+                        position: "absolute",
+                        width: "16vw",
+                        left: "-2vw",
+                        top:"-3vh",
+                        pointerEvents: "none",
+                        zIndex: 12
+                      }}
+                    />
+                  )}</Link></div>
       <img className="group-5" alt="Group" src={group2} />
       <img className="vector-2" alt="Vector" src={vector306} />
       <div className="text-wrapper-2">Ai drawing diary</div>

@@ -328,13 +328,6 @@ function Post() {
       ) : (
         <TagComponent nouns={nouns} onImagesSelected={onImagesSelected} />
       )}
-      <button style={{position:"absolute", left:"50vw", top:"40vh"}}onClick={handleCaptureAndSubmit}>캔버스 이미지 전송</button>
-      <canvas 
-        ref={canvasRef} 
-        width="895" 
-        height="555" 
-        style={{ position:"absolute", left:"4.2vw", top:"18vh"}} 
-      />
     </div>
   );
 }

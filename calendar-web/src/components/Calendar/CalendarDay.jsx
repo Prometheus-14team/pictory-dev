@@ -17,7 +17,7 @@ function CalendarDay({ date }) {
               style={{
                 opacity: isFirstColumn || isSeventhColumn ? 0.5 : 1, // 투명도 적용
               }}>
-        <Link to={`/post/${datePath}`}>{format(date, "d")}</Link>
+        <Link to={`/post/${datePath}`} style={{ textDecoration: "none", color: "inherit" }}>{format(date, "d")}</Link>
 
       </div>
     </div>

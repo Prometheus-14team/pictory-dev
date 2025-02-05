@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { ko } from "date-fns/locale"; // 한국어 로케일
 import "../assets/styles.css";
 import { ReactComponent as PostLayer } from "../assets/post.svg";
+import { useNavigate } from 'react-router-dom';  // 페이지 이동을 위해 추가
 
 import PostSubmit from "./postsubmit";
 import PostSubmit2 from "./postsubmit";
@@ -24,6 +25,10 @@ import rainb from "../assets/img/rainb.png";
 import group38 from "../assets/img/Group 38.png";
 import textsmall from "../assets/img/textsmall.png";
 import component3 from "../assets/img/Component 3.png";
+import backy from "../assets/img/backy.png";
+import goy from "../assets/img/goy.png";
+import check from "../assets/img/check.png";
+
 
 function Post({ 
   currentDate,
@@ -48,13 +53,18 @@ function Post({
   const [hoveredSun, setHoveredSun] = useState(false);
   const [hoveredCloud, setHoveredCloud] = useState(false);
   const [hoveredRain, setHoveredRain] = useState(false);
-  
+  const [hoveredBack, setHoveredBack] = useState(false);
+  const [hoveredPost, setHoveredPost] = useState(false);
+
+  const navigate = useNavigate();
+  const canvasRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   // Group38 이미지 보이기 위한 상태
   const [showGroup38, setShowGroup38] = useState(false); 
 
   const [submitted, setSubmitted] = useState(false);
 
-  
   // PostSubmit 클릭시 그룹38 이미지를 보이도록 하고, 기존 handleSubmit 호출
   const handlePostSubmit = (e) => {
     e.preventDefault();
@@ -63,12 +73,60 @@ function Post({
     handleSubmit(e); // 기존의 제출 처리 로직 호출
   };
   const formattedDate = format(new Date(currentDate), "yyyy년 M월 d일 eeee", { locale: ko });
+  const handleCaptureAndSubmit = async () => {
+    setIsLoading(true);  
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+  
+    // 캔버스 이미지를 base64 포맷으로 캡처
+    const imageData = canvas.toDataURL("sketches/png"); 
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/POST/image/${currentDate}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          image: imageData, 
+        }),
+      });
+  
+      if (response.ok) {
+        alert('이미지 전송 성공!');
+        // 이미지 전송 후 finalPost 페이지로 이동
+        setTimeout(() => {
+          navigate('/finalPost');  // 페이지 이동
+        }, 1500);  // 1.5초 후에 이동 (로딩 효과를 보여주기 위해)
+      } else {
+        alert('이미지 전송 실패. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error('서버 전송 중 오류 발생:', error);
+      alert('서버 전송 중 오류가 발생했습니다.');
+    } finally {
+      setIsLoading(false);  // 로딩 끝
+    }
+  };
 
   return (
     <div className="container">
-      <div className="back">
+      <div className="back" 
+      onMouseEnter={() => setHoveredBack(true)}
+      onMouseLeave={() => setHoveredBack(false)}>
         <Link to="/calendar">
           <img src={backButton} alt="backButton" className="back-img" />
+          {(hoveredBack) && (
+            <img
+              src={backy}
+              style={{
+                position: "absolute",
+                pointerEvents: "none",
+                zIndex: "100",
+              }}
+            />
+          )}
         </Link>
       </div>
       <div className="face">
@@ -222,7 +280,23 @@ function Post({
           {/* 제출 전일 때만 렌더링 */}
           {!submitted && (
             <>
+            <div       
+            onMouseEnter={() => setHoveredPost(true)}
+            onMouseLeave={() => setHoveredPost(false)}>
               <PostSubmit handleSubmit={handlePostSubmit} />
+              {(hoveredPost) && (
+            <img
+              src={goy}
+              style={{
+                position: "absolute",
+                left: "40.4vw",
+                top: "-4vh",
+                pointerEvents: "none",
+                zIndex: "100",
+              }}
+            />
+          )}
+            </div>
               <form ref={formRef} onSubmit={handlePostSubmit}>
                 <img src={t} style={{ width: "45vw" }} alt="text decoration" />
                 <textarea
@@ -251,7 +325,19 @@ function Post({
                 />
           </form>
           <img src={component3} style={{ width: "3vw", left: "91vw", top:"80vh" }} className="textsmall" />
-        </div>
+          <canvas 
+        ref={canvasRef} 
+        width="895" 
+        height="447.5" 
+        style={{ position:"absolute", left:"4.2vw", top:"22.3vh", border: "2px solid black" // 검은 테두리 추가
+        }} 
+      />
+          <img 
+            src={check}
+            alt="캔버스 이미지 전송" 
+            style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
+            onClick={handleCaptureAndSubmit} 
+          /></div>
       )}
     </div>
   );

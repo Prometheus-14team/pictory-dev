@@ -5,14 +5,12 @@ import "../assets/styles.css";
 import group28 from "../assets/img/Group 28.png";
 
 function List() {
-
-  
-
   return (
-    <div className="sidebar">
-      <div style={{position:"absolute", top: "-13vh"}}>
+    <div>
+      <div style={{position:"absolute", left: "63vw", top: "6.5vh"}}>
         <img src={group28} style={{width:"7vw", height:"auto"}}/>
-      </div>      
+      </div>   
+    <div className="sidebar">   
       {posts.map((post) => (
         <ListPost
           key={post.id}
@@ -22,7 +20,7 @@ function List() {
           date={post.date}
         />
       ))}
-    </div>
+    </div></div>
   );
 }
 

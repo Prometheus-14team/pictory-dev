@@ -437,16 +437,17 @@ width: 1107px;
 
 .intro .group-2 {
 position: absolute;
-width: 38vw;
-left: 7vw;
-top: 45.8vh;
+width: 40vw;
+height: auto;
+left: 15.8vw;
+top: 43vh;
 }
 
 .intro .vector {
 position: absolute;
 width: 2.37vw;
 height: 8.1vh;
-left: 13.1vw;
+left: 14vw;
 top: 55.6vh;
 }
 
@@ -591,9 +592,11 @@ font-family: 'Poppins';
   background-color: #ffffff;
   height: 1080px;
   position: absolute;
-  width: 664px;
   margin-top: -110vh;
   margin-left: 62vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .image-list {
@@ -808,6 +811,8 @@ html, body {
 .text-input {
   all: unset;
   position: relative;
+  width: 41vw;
+  height: 35vh;
   left: 1.2vw;
   top: -40vh;
   font-size: 22px;
@@ -878,22 +883,27 @@ html, body {
 /*Tag*/
 /* 임시임 */
 /* 전체 태그 컨테이너 */
+/* 태그 컨테이너 설정 */
 .tag-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(2vw, 1fr)); /* 각 태그의 최소 너비를 200px로 설정 */
-  flex-wrap: wrap;
-  max-height: 20vh;
-  gap: 4vw; /* 태그 간 간격 */
+  grid-template-columns: repeat(3, 1fr); /* 3개의 컬럼으로 설정 */
+  max-width: 40vw;
+  gap: 1.5vw; /* 태그 간 간격 */
   position: relative;
   left: 50vw;
   top: 10vh;
+  width: 90vw; /* 컨테이너 너비 설정 */
+  box-sizing: border-box;
 }
 
 /* 각 태그와 텍스트를 감싸는 컨테이너 */
 .tag-item {
   position: relative;
-  display: inline-block;
+  display: block;
   text-align: center;
+  width: 100%; /* 태그의 너비를 부모 컨테이너에 맞게 설정 */
+  max-width: 200px; /* 각 태그의 최대 너비를 제한 */
+  box-sizing: border-box;
 }
 
 /* SVG 스타일 */
