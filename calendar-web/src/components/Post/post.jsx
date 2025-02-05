@@ -38,6 +38,7 @@ function Post({
   handleUserIdChange,
   handleSubmit,
   formRef,
+  handleCaptureAndSubmit
  }) {
   // 기존의 face 및 weather 상태
   const [activeSmile, setActiveSmile] = useState(false);
@@ -73,42 +74,6 @@ function Post({
     handleSubmit(e); // 기존의 제출 처리 로직 호출
   };
   const formattedDate = format(new Date(currentDate), "yyyy년 M월 d일 eeee", { locale: ko });
-  const handleCaptureAndSubmit = async () => {
-    setIsLoading(true);  
-
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-  
-    // 캔버스 이미지를 base64 포맷으로 캡처
-    const imageData = canvas.toDataURL("sketches/png"); 
-  
-    try {
-      const response = await fetch(`http://127.0.0.1:5000/POST/image/${currentDate}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: imageData, 
-        }),
-      });
-  
-      if (response.ok) {
-        alert('이미지 전송 성공!');
-        // 이미지 전송 후 finalPost 페이지로 이동
-        setTimeout(() => {
-          navigate('/finalPost');  // 페이지 이동
-        }, 1500);  // 1.5초 후에 이동 (로딩 효과를 보여주기 위해)
-      } else {
-        alert('이미지 전송 실패. 다시 시도해주세요.');
-      }
-    } catch (error) {
-      console.error('서버 전송 중 오류 발생:', error);
-      alert('서버 전송 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);  // 로딩 끝
-    }
-  };
 
   return (
     <div className="container">
@@ -325,19 +290,14 @@ function Post({
                 />
           </form>
           <img src={component3} style={{ width: "3vw", left: "91vw", top:"80vh" }} className="textsmall" />
-          <canvas 
-        ref={canvasRef} 
-        width="895" 
-        height="447.5" 
-        style={{ position:"absolute", left:"4.2vw", top:"22.3vh", border: "2px solid black" // 검은 테두리 추가
-        }} 
-      />
+
           <img 
             src={check}
             alt="캔버스 이미지 전송" 
             style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
             onClick={handleCaptureAndSubmit} 
-          /></div>
+          />
+          </div>
       )}
     </div>
   );

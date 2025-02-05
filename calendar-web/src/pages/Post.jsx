@@ -5,6 +5,7 @@ import PostComponent from "../components/Post/post";
 import TagComponent from "../components/Post/Tag"; 
 import FinalPost from "./FinalPost";
 import "../components/assets/styles.css";
+import check from "../components/assets/img/check.png";
 
 
 function Post() {
@@ -321,14 +322,27 @@ function Post() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
         handleReset={handleReset}
+        handleCaptureAndSubmit={handleCaptureAndSubmit}
         formRef={formRef}
       />
-      
       {isLoading ? (
         <p>로딩중입니다~~~~~~~~~~~~~~~~~</p>
       ) : (
         <TagComponent nouns={nouns} onImagesSelected={onImagesSelected} />
       )}
+                <canvas 
+        ref={canvasRef} 
+        width="895" 
+        height="447.5" 
+        style={{ position:"absolute", left:"4.2vw", top:"22.3vh", border: "2px solid black" // 검은 테두리 추가
+        }} 
+      />
+                {/* <img 
+                  src={check}
+                  alt="캔버스 이미지 전송" 
+                  style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
+                  onClick={handleCaptureAndSubmit} 
+                /> */}
     </div>
   );
 }

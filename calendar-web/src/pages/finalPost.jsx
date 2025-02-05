@@ -1,6 +1,6 @@
 //finalPost 페이지
 import React, { useState, useEffect } from "react";
-import FinalPostComponent from "../components/Post/FinalPost";
+import FinalPostComponent from "../components/Post/finalPost";
 import pictorysmall from "../components/assets/img/PICTORYsmall.png";
 import cloud2 from "../components/assets/img/cloud2.png";
 import Group13 from "../components/assets/img/Group 13.png";
