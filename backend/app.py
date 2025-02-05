@@ -16,7 +16,7 @@ from models import ControlNet, AudioLDM, LLM, FastText, stemmer, get_mapped_word
 
 
 # Flask API
-app = Flask(__name__, static_folder="../frontend/build")
+app = Flask(__name__, static_folder="../calendar-web/build")
 CORS(app)
 
 # 정적 파일 서빙 설정 (이미지 폴더 지정)
@@ -97,6 +97,7 @@ def get_drawing_tag(date):
     #     return jsonify({"tag": []})
    
     
+
     tag_data = [
         ["강아지", f"/data/drawings/강아지.png", f"/data/drawings/개구리.png", f"/data/drawings/골격모형.png", f"/data/drawings/곰.png", f"/data/drawings/도끼.png", f"/data/drawings/도넛.png", f"/data/drawings/돌고래.png"],  # URL 형태로 수정
         ["고양이", f"/data/drawings/고양이.png"],

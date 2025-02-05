@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';  // 페이지 이동을 위해 �
 import { format } from "date-fns";
 import PostComponent from "../components/Post/post"; 
 import TagComponent from "../components/Post/Tag"; 
+import FinalPost from "./FinalPost";
 import "../components/assets/styles.css";
 
 
@@ -76,7 +77,7 @@ function Post() {
         alert('이미지 전송 성공!');
         // 이미지 전송 후 finalPost 페이지로 이동
         setTimeout(() => {
-          navigate('/finalPost')  // navigate(`/finalPost/${currentDate}`)
+          navigate('/FinalPost')  // navigate(`/FinalPost/${currentDate}`)
         }, 1500);  // 1.5초 후에 이동 (로딩 효과를 보여주기 위해)
       } else {
         alert('이미지 전송 실패. 다시 시도해주세요.');

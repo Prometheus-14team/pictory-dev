@@ -1,6 +1,6 @@
 //finalPost 페이지
 import React, { useState, useEffect } from "react";
-import finalPostComponent from "../components/Post/finalPost";
+import FinalPostComponent from "../components/Post/FinalPost";
 import pictorysmall from "../components/assets/img/PICTORYsmall.png";
 import cloud2 from "../components/assets/img/cloud2.png";
 import Group13 from "../components/assets/img/Group 13.png";
@@ -20,16 +20,16 @@ import  music  from "../components/assets/img/Group 54.png";
 import  photo  from "../components/assets/img/Component 6.png";
 
 
-function finalPost({currentDate}) {
+function FinalPost({currentDate}) {
 
   const [imageUrl, setImageUrl] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
 
-  useEffect(() => {
-    // 페이지 로딩 시 자동으로 이미지와 오디오 요청하기
-    fetchImage();
-    fetchAudio();
-  }, [currentDate]);
+  // useEffect(() => {
+  //   // 페이지 로딩 시 자동으로 이미지와 오디오 요청하기
+  //   fetchImage();
+  //   fetchAudio();
+  // }, [currentDate]);
 
   const fetchImage = () => {
     fetch(`/GET/image/${currentDate}`)
@@ -99,25 +99,29 @@ function finalPost({currentDate}) {
         <button onClick={fetchAudio}><img className="music" alt="Group" src={music} /></button>
         
 
-      <finalPostComponent />
+        {/* 이미지 표시 */}
+        {imageUrl && <img src={imageUrl} alt="Diary Image" className="diaryImage" />}
+
+        {/* 오디오 자동 재생 */}
+        {audioUrl && (
+          <audio autoPlay controls>
+            <source src={audioUrl} type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+        )}
+
+        
+
+
+      <FinalPostComponent />
     </div>
 
   );
 }
 
-export default finalPost; 
+export default FinalPost; 
 
 
  
   
-// {/* 이미지를 보여주는 부분 */}
-// {imageUrl && <img src={imageUrl} alt="Diary Image" className="diaryImage" />}
-      
-// {/* 오디오를 재생할 수 있는 부분 */}
-// {audioUrl && (
-//   <audio controls>
-//     <source src={audioUrl} type="audio/mp3" />
-//     Your browser does not support the audio element.
-//   </audio>
-// )} 
 
