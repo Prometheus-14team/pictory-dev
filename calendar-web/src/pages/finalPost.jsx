@@ -1,6 +1,6 @@
 //finalPost 페이지
-import React from "react";
-import finalPostComponent from "../components/Post/finalPost";
+import React, { useState, useEffect } from "react";
+import FinalPostComponent from "../components/Post/FinalPost";
 import pictorysmall from "../components/assets/img/PICTORYsmall.png";
 import cloud2 from "../components/assets/img/cloud2.png";
 import Group13 from "../components/assets/img/Group 13.png";
@@ -20,11 +20,52 @@ import  music  from "../components/assets/img/Group 54.png";
 import  photo  from "../components/assets/img/Component 6.png";
 
 
-function finalPost({currentDate}) {
-    // 재생성 버튼 기능 추가
-    // current date 기능
-    // DB에서 가져올 것: content, 재생성
+function FinalPost({currentDate}) {
 
+  const [imageUrl, setImageUrl] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
+
+  // useEffect(() => {
+  //   // 페이지 로딩 시 자동으로 이미지와 오디오 요청하기
+  //   fetchImage();
+  //   fetchAudio();
+  // }, [currentDate]);
+
+  const fetchImage = () => {
+    fetch(`/GET/image/${currentDate}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error("Image not found");
+        }
+      })
+      .then((imageBlob) => {
+        const imageObjectURL = URL.createObjectURL(imageBlob);
+        setImageUrl(imageObjectURL);
+      })
+      .catch((error) => {
+        console.error("Error fetching image:", error);
+      });
+  };
+
+  const fetchAudio = () => {
+    fetch(`/GET/audio/${currentDate}`)
+      .then((response) => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error("Audio not found");
+        }
+      })
+      .then((audioBlob) => {
+        const audioObjectURL = URL.createObjectURL(audioBlob);
+        setAudioUrl(audioObjectURL);
+      })
+      .catch((error) => {
+        console.error("Error fetching audio:", error);
+      });
+  };
 
 
 
@@ -54,13 +95,33 @@ function finalPost({currentDate}) {
         <Link to={`/post/${currentDate}`}>
           <img className="write" alt="Group" src={write} /> 
         </Link>
-        <img className="music" alt="Group" src={music} />
-        <img className="photo" alt="Group" src={photo} />
+        <button onClick={fetchImage}><img className="photo" alt="Group" src={photo} /></button>
+        <button onClick={fetchAudio}><img className="music" alt="Group" src={music} /></button>
+        
 
-      <finalPostComponent />
+        {/* 이미지 표시 */}
+        {imageUrl && <img src={imageUrl} alt="Diary Image" className="diaryImage" />}
+
+        {/* 오디오 자동 재생 */}
+        {audioUrl && (
+          <audio autoPlay controls>
+            <source src={audioUrl} type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio>
+        )}
+
+        
+
+
+      <FinalPostComponent />
     </div>
 
   );
 }
 
-export default finalPost; 
+export default FinalPost; 
+
+
+ 
+  
+

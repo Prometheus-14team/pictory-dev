@@ -17,16 +17,19 @@ class ControlNet():
         # 모델 파이프라인
         controlnet = ControlNetModel.from_pretrained(
             "Dohyeon1/Pictory-controlnet-crayon-r8-edge-lr1e-4-ep10",
-            torch_dtype=torch.bfloat16,
-            device_map=device
+            torch_dtype=torch.float16
         )
-        self.self.pipe = StableDiffusionControlNetPipeline.from_pretrained(
+        self.pipe = StableDiffusionControlNetPipeline.from_pretrained(
             "runwayml/stable-diffusion-v1-5", 
             controlnet=controlnet,
-            torch_dtype=torch.bfloat16,
-            device_map=device
+            torch_dtype=torch.float16
         )
         self.pipe.scheduler = UniPCMultistepScheduler.from_config(self.pipe.scheduler.config)
+        self.pipe.enable_xformers_memory_efficient_attention()
+
+        # 모델 디바이스 이동
+        self.pipe.to(device)
+        
 
     @torch.inference_mode()
     def generate(self, image):

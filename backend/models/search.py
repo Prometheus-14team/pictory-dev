@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import fasttext
+import fasttext.util
 from konlpy.tag import Okt
 
 
@@ -12,10 +13,10 @@ TARGET_WORDS = list(map(lambda x: x.rstrip(".png"), os.listdir(base_path)))
 
 class FastText():
     def __init__(self):
-        fasttext.utils.download_model("ko", if_exists="ignore")
+        fasttext.util.download_model("ko", if_exists="ignore")
         self.fasttext = fasttext.load_model("cc.ko.300.bin")
         self.targets = np.array(TARGET_WORDS)
-        targets_vector = np.stack([self.fasttext.get_word_vector(word) for word in self.sketch_words], axis=0)
+        targets_vector = np.stack([self.fasttext.get_word_vector(word) for word in self.targets], axis=0)
         self.targets_vector = targets_vector / np.linalg.norm(targets_vector, ord=2, axis=1, keepdims=True)
 
     def get_similar_words(self, words, topk=10):

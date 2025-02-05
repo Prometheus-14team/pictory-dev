@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import CalendarPage from "./pages/Calendar";
 import Post from "./pages/Post";
-import FinalPost from "./pages/finalPost";
+import FinalPost from "./pages/FinalPost";
 
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/calendar" element={<CalendarPage />} />
           <Route path="/post" element={<Post />} />
-          <Route path="/finalpost" element={<FinalPost />} />
+          <Route path="/Finalpost" element={<FinalPost />} />
 
           
 
