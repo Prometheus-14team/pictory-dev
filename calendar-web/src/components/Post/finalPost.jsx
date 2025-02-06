@@ -1,7 +1,6 @@
-//finalPost 페이지
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import FinalPostComponent from "../Post/finalPost";
+import FinalPostComponent from "./FinalPost";
 import { format } from "date-fns";
 
 function FinalPost({currentDate}) {

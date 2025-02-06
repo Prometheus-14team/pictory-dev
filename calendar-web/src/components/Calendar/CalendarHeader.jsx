@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { format } from "date-fns";
+import { format, getDay } from "date-fns";
 import "../assets/styles.css";
 import polygon2 from "../assets/img/Polygon 2.png";
 import polygon3 from "../assets/img/Polygon 3.png";
@@ -11,6 +11,7 @@ import group29 from "../assets/img/Group 29.png";
 import { ko } from "date-fns/locale";
 
 function CalendarHeader({ currentDate, onNext, onPrev }) {
+  const datePath = format(currentDate, "yyyy-MM-dd");
   const [isHovered, setIsHovered] = useState(false);
   return (
     <div className="header-wrapper">
@@ -47,7 +48,7 @@ function CalendarHeader({ currentDate, onNext, onPrev }) {
           onMouseLeave={() => setIsHovered(false)}
           style={{ position: "relative" }}
         >
-          <Link to="/post">
+          <Link to={`/post/${datePath}`}>
             <img
               className="misc"
               alt="Misc"

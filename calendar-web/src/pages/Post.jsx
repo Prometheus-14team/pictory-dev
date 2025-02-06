@@ -1,15 +1,17 @@
+//Post.jsx 페이지
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';  // 페이지 이동을 위해 추가
+import { useNavigate, useParams } from 'react-router-dom';  // 페이지 이동을 위해 추가
 import { format } from "date-fns";
 import PostComponent from "../components/Post/post"; 
 import TagComponent from "../components/Post/Tag"; 
-import FinalPost from "./FinalPost";
+import FinalPost from "./finalPost";
 import "../components/assets/styles.css";
 import check from "../components/assets/img/check.png";
 
 
 function Post() {
-  const currentDate = format(new Date(), "yyyy-MM-dd");
+  const { date } = useParams(); // // URL에서 'date' 파라미터 받아오기
+  const [dateObject, setDateObject] = useState(null);
   const [text, setText] = useState('');
   const [nouns, setNouns] = useState([]); 
   const [isLoading, setIsLoading] = useState(false);
@@ -31,11 +33,11 @@ function Post() {
   const handleChange = (e) => setText(e.target.value);
   const handleReset = () => {setText('');};
 
-  // 서버로 데이터 전송 (POST 요청)
+  // 서버로 raw_text 데이터 전송 (POST 요청)
   const handleSubmit = async (event) => {
     event.preventDefault(); // 기본 폼 제출 방지
     try {
-        const response = await fetch(`http://127.0.0.1:5000/POST/text/${currentDate}`, {
+        const response = await fetch(`http://127.0.0.1:5000/POST/text/${date}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ raw_text: text }), 
@@ -54,6 +56,7 @@ function Post() {
     }
   };
 
+  // 서버로 canvas 이미지 전송
   const handleCaptureAndSubmit = async () => {
     setIsLoading(true);  
 
@@ -64,7 +67,7 @@ function Post() {
     const imageData = canvas.toDataURL("sketches/png"); 
   
     try {
-      const response = await fetch(`http://127.0.0.1:5000/POST/image/${currentDate}`, {
+      const response = await fetch(`http://127.0.0.1:5000/POST/image/${date}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,8 +81,8 @@ function Post() {
         alert('이미지 전송 성공!');
         // 이미지 전송 후 finalPost 페이지로 이동
         setTimeout(() => {
-          navigate('/FinalPost')  // navigate(`/FinalPost/${currentDate}`)
-        }, 1500);  // 1.5초 후에 이동 (로딩 효과를 보여주기 위해)
+          navigate(`/FinalPost/${date}`) 
+        }, 1500);  
       } else {
         alert('이미지 전송 실패. 다시 시도해주세요.');
       }
@@ -87,7 +90,7 @@ function Post() {
       console.error('서버 전송 중 오류 발생:', error);
       alert('서버 전송 중 오류가 발생했습니다.');
     } finally {
-      setIsLoading(false);  // 로딩 끝
+      setIsLoading(false);  
     }
   };
 
@@ -96,8 +99,8 @@ function Post() {
   const fetchNouns = async () => {
     setIsLoading(true);
     try {
-      const currentDate = format(new Date(), "yyyy-MM-dd");
-      const response = await fetch(`http://127.0.0.1:5000/GET/tag/${currentDate}`);
+      
+      const response = await fetch(`http://127.0.0.1:5000/GET/tag/${date}`);
       if (response.ok) {
         const data = await response.json();
         const nounsWithImages = data.tag.map(([noun, ...imagePath]) => ({
@@ -105,7 +108,7 @@ function Post() {
           images: imagePath,
         }));  
         setNouns(nounsWithImages); 
-        
+
       } else {
         console.error('명사 데이터를 가져오지 못했습니다.');
       }
@@ -306,43 +309,83 @@ function Post() {
     }
   };
 
+  //뒤로 가기 시 기존 데이터 유지
+  useEffect(() => {
+    const savedText = sessionStorage.getItem(`textData-${date}`);
+    const savedNouns = sessionStorage.getItem(`nounsData-${date}`);
+   
+    if (savedText) {
+        setText(savedText);  // 저장된 텍스트가 있으면 상태를 업데이트
+    } else {
+        
+        setText("");  
+    }
+
+    if (savedNouns) {
+        setNouns(JSON.parse(savedNouns));  
+    } else {
+        setNouns([]);  
+    }
+}, []); 
+
+
+
   // POST 요청 후에만
   useEffect(() => {
     if (isPostSubmitted) {
       fetchNouns();
       setIsPostSubmitted(false); 
+    
+    // 세션에 날짜별로 데이터 저장
+    sessionStorage.setItem(`textData-${date}`, text);  // 날짜별로 textData 저장
+    sessionStorage.setItem(`nounsData-${date}`, JSON.stringify(nouns));  // 날짜별로 nounsData 저장
+      
     }
   }, [isPostSubmitted]);
+
+  useEffect(() => {
+    //  console.log("현재 날짜:", date);
+    if (date) {
+     const dateObj = new Date(date);
+     setDateObject(dateObj);
+     console.log('변환된 Date 객체:', dateObj);
+   }
+ }, [date]);
+ 
+
+  
+
 
   return (
     <div>
       <PostComponent
-        currentDate={currentDate}
+        currentDate={date}
         text={text}
-        handleChange={handleChange}
+        handleChange={(e) => setText(e.target.value)}
         handleSubmit={handleSubmit}
         handleReset={handleReset}
-        handleCaptureAndSubmit={handleCaptureAndSubmit}
         formRef={formRef}
-      />
+        />
+      
       {isLoading ? (
         <p>로딩중입니다~~~~~~~~~~~~~~~~~</p>
       ) : (
         <TagComponent nouns={nouns} onImagesSelected={onImagesSelected} />
       )}
-                <canvas 
+      <canvas 
         ref={canvasRef} 
         width="895" 
         height="447.5" 
         style={{ position:"absolute", left:"4.2vw", top:"22.3vh", border: "2px solid black" // 검은 테두리 추가
         }} 
       />
-                {/* <img 
-                  src={check}
-                  alt="캔버스 이미지 전송" 
-                  style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
-                  onClick={handleCaptureAndSubmit} 
-                /> */}
+      
+      <img 
+        src={check}
+        alt="캔버스 이미지 전송" 
+        style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
+        onClick={handleCaptureAndSubmit} 
+      />
     </div>
   );
 }

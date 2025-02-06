@@ -1,3 +1,4 @@
+//PostComponent 코드
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
@@ -33,9 +34,7 @@ import check from "../assets/img/check.png";
 function Post({ 
   currentDate,
   text,
-  userId,
   handleChange,
-  handleUserIdChange,
   handleSubmit,
   formRef,
   handleCaptureAndSubmit

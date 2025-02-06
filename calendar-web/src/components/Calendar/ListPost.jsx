@@ -23,4 +23,3 @@ function ListPost({ date, content, image }) {
 
 export default ListPost;
 
-// format(new Date(date), "yyyy-MM-dd")

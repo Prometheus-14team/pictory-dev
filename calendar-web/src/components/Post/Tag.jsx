@@ -1,4 +1,4 @@
-// Tag 컴포넌트
+// TagCompoent 코드
 import React, { useState, useEffect } from "react"
 import { ReactComponent as TagActive } from "../assets/tagActive.svg";
 import { ReactComponent as TagHover } from "../assets/tagHover.svg";

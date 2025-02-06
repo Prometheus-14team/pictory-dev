@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ListPost from "./ListPost"; // Post 컴포넌트 가져오기
+import { Link } from "react-router-dom";
+import { format } from 'date-fns';
 import "../assets/styles.css";
 import group28 from "../assets/img/Group 28.png";
 
@@ -11,7 +13,7 @@ function List() {
     fetch("http://127.0.0.1:5000/GET/all")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data, "useEffect에 출력!!!!!!!!!");
+        console.log(data, "API 응답 내용");
         setPosts(data.all || []); // data.all이 undefined일 경우 빈 배열로 설정
         setIsLoading(false); 
       })
@@ -33,11 +35,16 @@ function List() {
         // posts가 배열일 경우 map을 실행
         Array.isArray(posts) && posts.length > 0 ? (
           posts.map((post) => (
+          <Link
+            to={`/finalpost/${format(new Date(post.date), 'yyyy-MM-dd')}`} 
+            key={post.id} 
+          >
             <ListPost
-              date={post.date}
-              content={post.summarized_text || ""}
+              date={format(new Date(post.date), "yyyy-MM-dd")}
+              content={post.summarized_text_kr}
               image={post.image}
             />
+            </Link>
           ))
         ) : (
           <p>No posts available</p>
