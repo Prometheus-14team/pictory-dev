@@ -15,5 +15,5 @@ class Diary(db.Model):
     audio = db.Column(db.String(512), unique=False, nullable=True)
 
     def to_dict(self):
-        return {"id": self.id, "date": self.date, "raw_text": self.raw_text, "summarized_text": self.summarized_text,
+        return {"id": self.id, "date": self.date, "raw_text": self.raw_text, "summarized_text": self.summarized_text_kr,
                 "sketch": self.sketch, "image": self.image, "audio": self.audio}
