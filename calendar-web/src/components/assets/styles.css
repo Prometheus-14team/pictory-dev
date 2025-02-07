@@ -127,9 +127,8 @@ main .text-wrapper-2{
   color: #000;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4.98vw;
+  gap: 5.2vw;
   text-align: center;
-  margin-bottom: 0;
   font-family: Pretendard;
   font-size: 28px;
   font-weight: 700;
@@ -158,8 +157,33 @@ main .text-wrapper-2{
 }
 
 .element {
-  pointer-events: auto; /* 클릭 허용 */
+  position: relative;
+  width: 3vw;
+  height: 3vw;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
 }
+
+.element::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #FADF9E;
+  transform: scale(1);
+  visibility: hidden; /* 원은 기본적으로 숨겨둠 */
+  z-index: -1;
+}
+
+.element:hover::after {
+  visibility: visible; /* hover 시 원이 보이게 */
+  transform: scale(2); /* hover 시 원만 커짐 */
+}
+
 
 main .text-wrapper {
   font-family: "Pretendard-SemiBold", Helvetica;
@@ -590,13 +614,14 @@ font-family: 'Poppins';
 .sidebar {
   font-family: "Pretendard Regular"; 
   background-color: #ffffff;
-  height: 1080px;
+  height: 100vh;
+  width: 40vw;
   position: absolute;
-  margin-top: -110vh;
+  margin-top: -123vh;
   margin-left: 62vw;
   max-height: 80vh;
   overflow-y: auto;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .image-list {
@@ -760,7 +785,7 @@ html, body {
 .post-layer {
   width: 40vw;
   position: relative;
-  left: 29vw;
+  left: 31vw;
   top: 10vh;
 }
 
@@ -804,7 +829,7 @@ html, body {
   position: relative;
   width: 52vw;
   top: 45vh;
-  left: 23vw;
+  left: 27vw;
 }
 
 
@@ -868,7 +893,7 @@ html, body {
   letter-spacing: 0.96px;
   z-index: 100;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
   top: 13vh;
-  left: -9vw;
+  left: -7vw;
   white-space: nowrap;
 }
 
@@ -887,13 +912,18 @@ html, body {
 .tag-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3개의 컬럼으로 설정 */
-  max-width: 40vw;
+  max-width: 45vw;
+  max-height: 60vh;
   gap: 1.5vw; /* 태그 간 간격 */
   position: relative;
   left: 50vw;
   top: 10vh;
   width: 90vw; /* 컨테이너 너비 설정 */
   box-sizing: border-box;
+}
+
+.tag-container:has(.tag-item:nth-child(15)) {
+  overflow-y: auto;
 }
 
 /* 각 태그와 텍스트를 감싸는 컨테이너 */
@@ -936,7 +966,7 @@ html, body {
 
 .cloud2{
   position: relative;
-  top: 61vh;
+  top: 65vh;
 }
 
 .Group13{
@@ -947,28 +977,29 @@ html, body {
 
 .smile{
   left: 75vw;
-  top: 71vh;
+  top: 73vh;
 }
 
 .diary{
   position: relative;
   width: 70vw;
   left: 15vw;
-  top: -35vh;
+  top: -31vh;
   z-index: 20;
 }
 
 .di-text{
-  position: relative;
+  position: absolute;
   fill: #000;
   font-family: Pretendard;
-  font-size: 24px;
+  font-size: 32px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
   letter-spacing: 0.96px;
   z-index: 100;  /* 텍스트가 다른 요소 위에 표시되도록 설정 */
-  top: 13vh;
+  left: 19vw;
+  top: 6vh;
   white-space: nowrap;
 }
 
@@ -995,27 +1026,32 @@ html, body {
 .rectangle58 {
   position: relative;
   margin-left: 17vw;
-  top: -101vh;
+  top: -93vh;
   z-index: 100;
 }
 
 .write{
   position: relative;
-  margin-left: 87.9vw;
-  top: -123.5vh;
+  margin-left: 87.8vw;
+  top: -113vh;
   z-index: 110;
 }
 
 .photo{
   position: relative;
-  margin-left: 87.9vw;
-  top: -127.7vh;
+  margin-left: 87.7vw;
+  top: -112vh;
   z-index: 110;
 }
 
 .music{
   position: relative;
-  margin-left: 87.9vw;
-  top: -115vh;
+  margin-left: 87.7vw;
+  top: -111vh;
   z-index: 110;
+}
+
+.diaryImage{
+  margin-top: 2vh;
+  z-index: 100;
 }
