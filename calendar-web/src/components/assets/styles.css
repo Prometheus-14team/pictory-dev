@@ -670,6 +670,7 @@ font-family: 'Poppins';
   line-height: normal;
   position: absolute;
   top: 3.5vw;
+  max-width: 18vw;
 }
 
 .sidebar .ellipse {
@@ -1043,30 +1044,34 @@ html, body {
 }
 
 .rectangle58 {
-  position: relative;
-  margin-left: 32vw;
-  top: -140vh;
-  z-index: 100;
+  position: absolute;
+  top: 12vh; /* 화면 내에서 적절한 위치로 조정 */
+  left: 91%; /* 화면 오른쪽 끝에 배치 */
+  transform: translateX(-100%); /* 이미지가 화면 밖으로 나가지 않도록 */
+  z-index: 110;
 }
 
 .write{
-  position: relative;
-  margin-left: 87.9vw;
-  top: -160vh;
+  position: absolute;
+  top: 13.5vh; /* 화면 내에서 적절한 위치로 조정 */
+  left: 90.2%; /* 화면 오른쪽 끝에 배치 */
+  transform: translateX(-100%); /* 이미지가 화면 밖으로 나가지 않도록 */
   z-index: 110;
 }
 
 .photo{
-  position: relative;
-  margin-left: 87.9vw;
-  top: -158.5vh;
+  position: absolute;
+  top: 19.8vh; /* 화면 내에서 적절한 위치로 조정 */
+  left: 90.2%; /* 화면 오른쪽 끝에 배치 */
+  transform: translateX(-100%); /* 이미지가 화면 밖으로 나가지 않도록 */
   z-index: 110;
 }
 
 .music{
-  position: relative;
-  margin-left: 87.7vw;
-  top: -157.5vh;
+  position: absolute;
+  top: 26vh; /* 화면 내에서 적절한 위치로 조정 */
+  left: 90.2%; /* 화면 오른쪽 끝에 배치 */
+  transform: translateX(-100%); /* 이미지가 화면 밖으로 나가지 않도록 */
   z-index: 110;
 }
 
