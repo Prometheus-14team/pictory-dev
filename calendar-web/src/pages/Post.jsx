@@ -1,13 +1,11 @@
 //Post.jsx 페이지
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams,useLocation } from 'react-router-dom';  // 페이지 이동을 위해 추가
-import { format } from "date-fns";
+import { useNavigate, useParams,useLocation } from 'react-router-dom';  
 import PostComponent from "../components/Post/post"; 
 import TagComponent from "../components/Post/Tag"; 
-import FinalPost from "./finalPost";
 import "../components/assets/styles.css";
 import check from "../components/assets/img/check.png";
-
+import checky from "../components/assets/img/check_y.png";
 
 function Post() {
   const { date } = useParams(); // // URL에서 'date' 파라미터 받아오기
@@ -22,7 +20,8 @@ function Post() {
   const [imgPos, setImgPos] = useState([]); 
   const [imgSize, setImgSize] = useState([]); 
   const [isPhotoButtonClicked, setIsPhotoButtonClicked] = useState(false);
-  
+  const [tagGenInput, setTagGenInput] = useState(""); 
+
   const formRef = useRef(null); 
   const canvasRef = useRef(null);
   const location = useLocation();
@@ -31,11 +30,11 @@ function Post() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [mouseDown, setMouseDown] = useState(false);
   const [resizeMode, setResizeMode] = useState(false);
+  const [hoveredCheck, setHoveredCheck] = useState(false);
+
 
   const navigate = useNavigate();
-
-  const handleChange = (e) => setText(e.target.value);
-  const handleReset = () => {setText('');};
+  
 
   // 서버로 raw_text 데이터 전송 (POST 요청)
   const handleSubmit = async (event) => {
@@ -60,7 +59,9 @@ function Post() {
     }
   };
 
-  // 서버로 canvas 이미지 전송
+  
+
+  // 서버로 canvas 이미지,audio 전송(POST 요청)
   const handleCaptureAndSubmit = async () => {
     setIsLoading(true);  
 
@@ -69,9 +70,10 @@ function Post() {
   
     // 캔버스 이미지를 base64 포맷으로 캡처
     const imageData = canvas.toDataURL("sketches/png"); 
-  
+   
+
     try {
-      const response = await fetch(`http://127.0.0.1:5000/POST/image/${date}`, {
+      const imageResponse = await fetch(`http://127.0.0.1:5000/POST/image/${date}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,21 +82,56 @@ function Post() {
           image: imageData, 
         }),
       });
+
+      if (!imageResponse.ok) {
+        throw new Error('이미지 전송 실패');
+      }
   
-      if (response.ok) {
-        alert('이미지 전송 성공!');
-        // 이미지 전송 후 finalPost 페이지로 이동
-        setTimeout(() => {
-          navigate(`/FinalPost/${date}`) 
-        }, 1500);  
+      const audioResponse = await fetch(`http://127.0.0.1:5000/POST/audio/${date}`, {
+      method: 'POST',
+    });
+
+    if (!audioResponse.ok) {
+      throw new Error('오디오 전송 실패');
+    }
+
+    alert('이미지와 오디오 전송 성공!');
+
+    setTimeout(() => {
+      navigate(`/FinalPost/${date}`);
+    }, 1500);
+
+  } catch (error) {
+    console.error('서버 전송 중 오류 발생:', error);
+    alert('서버 전송 중 오류가 발생했습니다.');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+
+  // 태그 검색 함수 
+  const TagSearch = async () => {
+    
+    try {
+      const tagResponse = await fetch(`http://127.0.0.1:5000/POST/tag/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: tagGenInput }), 
+      });
+
+      if (tagResponse.ok) {
+        const tagData = await tagResponse.json();
+        const extractedNouns = tagData.tag.map(item => item[0]); // 첫 번째 요소(명사)만 가져오기
+
+        setNouns(extractedNouns);  
       } else {
-        alert('이미지 전송 실패. 다시 시도해주세요.');
+        alert('태그 검색 실패. 다시 시도해주세요.');
       }
     } catch (error) {
-      console.error('서버 전송 중 오류 발생:', error);
-      alert('서버 전송 중 오류가 발생했습니다.');
-    } finally {
-      setIsLoading(false);  
+      console.error('태그 검색 중 오류 발생:', error);
+      alert('태그 검색 중 오류가 발생했습니다.');
     }
   };
 
@@ -103,16 +140,15 @@ function Post() {
   const fetchNouns = async () => {
     setIsLoading(true);
     try {
-      
       const response = await fetch(`http://127.0.0.1:5000/GET/tag/${date}`);
       if (response.ok) {
         const data = await response.json();
+        // 명사와 이미지 경로를 묶어주는 형식으로 변환
         const nounsWithImages = data.tag.map(([noun, ...imagePath]) => ({
           noun: noun,
           images: imagePath,
-        }));  
-        setNouns(nounsWithImages); 
-
+        }));
+        setNouns(nounsWithImages);  // 상태 업데이트
       } else {
         console.error('명사 데이터를 가져오지 못했습니다.');
       }
@@ -131,12 +167,16 @@ function Post() {
       if (response.ok) {
         const data = await response.json();
         
-        // ✅ URL의 날짜와 일치하는 데이터 찾기
-        const matchedDiary = data.all.find((entry) => entry.date === date);
+        // 서버에서 받은 `entry.date`를 'YYYY-MM-DD' 형식으로 변환
+        const matchedDiary = data.all.find((entry) => {
+        // 서버에서 받은 date 값은 'Tue, 04 Feb 2025 00:00:00 GMT' 형태이므로 변환
+        const entryDate = new Date(entry.date).toISOString().split('T')[0];
+        return entryDate === date;
+      });
 
         if (matchedDiary) {
-          setRawText(matchedDiary.raw_text); // 해당 날짜의 raw_text 저장
-          setSummaryText(matchedDiary.summarized_text_kr); // 해당 날짜의 summarized_text_kr 저장
+          setRawText(matchedDiary.raw_text);
+          setSummaryText(matchedDiary.summarized_text_kr); 
         } else {
           console.warn("해당 날짜의 데이터를 찾을 수 없습니다.");
         }
@@ -173,7 +213,7 @@ function Post() {
 
         
         const handleSize = 10; 
-        ctx.fillStyle = "red"; // 점선이나 canvas 캡쳐 시에는
+        ctx.fillStyle = "red"; // 점선이나 canvas 캡쳐 시에는 안보이도록
         ctx.fillRect(x + width - handleSize, y + height - handleSize, handleSize, handleSize);
       };
       
@@ -348,36 +388,35 @@ function Post() {
   useEffect(() => {
     if (isPostSubmitted) {
       fetchNouns();
-      getAllDiaries(); //POST 버튼 누르면 TEXT갱신
+      getAllDiaries(); 
       setIsPostSubmitted(false); 
       
     }
   }, [isPostSubmitted]);
 
   useEffect(() => {
-    //  console.log("현재 날짜:", date);
+    
     if (date) {
-     const dateObj = new Date(date);
+      const dateObj = new Date(date);
      setDateObject(dateObj);
      console.log('변환된 Date 객체:', dateObj);
    }
  }, [date]);
  
-  // Link에서 전달한 state를 받아오는 부분
+  
+  // 경로와 Link의 state가 바뀔 때마다 실행
   useEffect(() => {
-    if (location.state && location.state.isPhotoButtonClicked) {
-      setIsPhotoButtonClicked(true);  // Link 클릭 시 상태 변경
-    }
-  }, [location.state]); // location.state가 변경될 때마다 실행
+    getAllDiaries();  
 
-  useEffect(() => {
-    getAllDiaries();  // 경로가 바뀔 때마다 getAllDiaries 실행
+    console.log(isPhotoButtonClicked)
 
-    if (isPhotoButtonClicked) {
-      fetchNouns();  // fetchNouns 호출
-      setIsPhotoButtonClicked(false);  // 클릭 후 상태 초기화
+     // Link에서 전달된 state가 있으면 isPhotoButtonClicked가 true일 때 fetchNouns()를 호출합니다.
+     if (location.state?.isPhotoButtonClicked) {
+      fetchNouns();
+      setIsPhotoButtonClicked(false); // 한 번 호출하고 나서 isPhotoButtonClicked를 false로 리셋
     }
-  }, [location.pathname, isPhotoButtonClicked]);  // location.pathname과 isPhotoButtonClicked가 변경될 때마다 실행
+  }, [location.pathname, location.state?.isPhotoButtonClicked]); // 상태 변화에 따라 useEffect 실행
+
 
   
 
@@ -389,11 +428,12 @@ function Post() {
         text={text}
         rawText={rawText}
         summaryText={summaryText}
+        tagGenInput = {tagGenInput}
         handleChange={(e) => setText(e.target.value)}
+        handleTagGenTextChange={(e) => setText(e.target.value)}
         handleSubmit={handleSubmit}
-        handleReset={handleReset}
+        handleGenerateAgain={TagSearch}
         formRef={formRef}
-      
         />
       
       {isLoading ? (
@@ -403,18 +443,31 @@ function Post() {
       )}
       <canvas 
         ref={canvasRef} 
-        width="895" 
-        height="447.5" 
-        style={{ position:"absolute", left:"4.2vw", top:"22.3vh", border: "2px solid black" // 검은 테두리 추가
-        }} 
-      />
-      
+        width="1000" 
+        height="500" 
+        style={{ position:"absolute", left:"4.2vw", top:"22.3vh"}} />
+      <div 
+          onMouseEnter={() => setHoveredCheck(true)}
+          onMouseLeave={() => setHoveredCheck(false)}>
       <img 
         src={check}
         alt="캔버스 이미지 전송" 
-        style={{position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
+        style={{zIndex:"2", position: "absolute", left: "51vw", top: "80vh", cursor: "pointer"}} 
         onClick={handleCaptureAndSubmit} 
       />
+                    {(hoveredCheck) && (
+                  <img
+                    src={checky}
+                    style={{
+                      position: "absolute",
+                      left: "51vw",
+                      top: "80vh",
+                      pointerEvents: "none",
+                      zIndex: "10",
+                    }}
+                  />
+                )}
+      </div>
     </div>
   );
 }

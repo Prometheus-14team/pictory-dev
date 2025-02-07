@@ -1,5 +1,5 @@
 //finalPost.jsx 페이지
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { format } from 'date-fns';
 import pictorysmall from "../components/assets/img/PICTORYsmall.png";
 import cloud2 from "../components/assets/img/cloud2.png";
@@ -35,7 +35,7 @@ function FinalPost() {
       setDateObject(dateObj);
       console.log('변환된 Date 객체:', dateObj);
 
-      // 첫 접근 시에는 개별적으로 데이터를 가져옴
+      // 첫 접근 시에는 개별적으로 데이터를 가져옴 (uf문 없애면 POST시 undefined 됨. 그래서 있어야한다.)
       if (isFirstVisit) {
         fetchImage();
         fetchAudio();
@@ -46,49 +46,49 @@ function FinalPost() {
         fetchAllData();
       }
     }
-  }, [date, isFirstVisit]);
+  }, [date]);
 
   const fetchImage = async () => {
     try {
       const response = await fetch(`http://127.0.0.1:5000/GET/image/${date}`);
       console.log("Image Fetch Response:", response.status, response.ok);
-
+  
       if (!response.ok) {
-        throw new Error(`이미지 GET요청: Image fetch failed with status: ${response.status}`);
+        throw new Error(`이미지 GET 요청 실패: Status ${response.status}`);
       }
-
-      const imageBlob = await response.blob();
-      console.log("Image Blob:", imageBlob);
-
-      const imageObjectURL = URL.createObjectURL(imageBlob);
-      console.log("Generated Image URL:", imageObjectURL);
-      setImageUrl(imageObjectURL);
-
-      console.log("Successfully fetched the image!");
+  
+      // 서버에서 직접 이미지 경로를 응답받는다고 가정
+      const data = await response.json(); // JSON 형태로 응답을 받음
+      console.log("서버에서 받은 이미지 경로:", data.image); // 예: "static/image/2025-03-12.png"
+  
+      // 경로를 그대로 사용
+      setImageUrl(data.image);
+  
+      console.log("이미지 성공적으로 반영됨!");
     } catch (error) {
-      console.error("Error fetching image:", error);
+      console.error("이미지 가져오는 중 오류 발생:", error);
     }
   };
-
+  
   const fetchAudio = async () => {
     try {
       const response = await fetch(`http://127.0.0.1:5000/GET/audio/${date}`);
       console.log("Audio Fetch Response:", response.status, response.ok);
-
+  
       if (!response.ok) {
-        throw new Error(`오디오 GET요청: Audio fetch failed with status: ${response.status}`);
+        throw new Error(`오디오 GET 요청 실패: Status ${response.status}`);
       }
-
-      const audioBlob = await response.blob();
-      console.log("Audio Blob:", audioBlob);
-
-      const audioObjectURL = URL.createObjectURL(audioBlob);
-      console.log("Generated Audio URL:", audioObjectURL);
-      setAudioUrl(audioObjectURL);
-
-      console.log("Successfully fetched the audio!");
+  
+      // 서버에서 JSON 응답을 받아 경로 추출
+      const data = await response.json();
+      console.log("서버에서 받은 오디오 경로:", data.audio); // 예: "static/audios/2025-03-12.wav"
+  
+      // 서버에서 받은 경로를 그대로 사용
+      setAudioUrl(data.audio);
+  
+      console.log("오디오 성공적으로 반영됨!");
     } catch (error) {
-      console.error("Error fetching audio:", error);
+      console.error("오디오 가져오는 중 오류 발생:", error);
     }
   };
 
@@ -96,21 +96,24 @@ function FinalPost() {
     try {
       const response = await fetch(`http://127.0.0.1:5000/GET/text/${date}`);
       console.log("Text Fetch Response:", response.status, response.ok);
-
+  
       if (!response.ok) {
-        throw new Error(`텍스트 GET요청: Text fetch failed with status: ${response.status}`);
+        throw new Error(`텍스트 GET 요청 실패: Status ${response.status}`);
       }
-
-      const textData = await response.json();
-      console.log("Fetched Text Data:", textData);
-
-      setText(textData.summarized_text_kr || "");
-
-      console.log("Successfully fetched the text!");
+  
+      // 서버에서 받은 JSON 데이터를 그대로 사용
+      const { summarized_text_kr } = await response.json();
+      console.log("서버에서 받은 요약 텍스트:", summarized_text_kr);
+  
+      setText(summarized_text_kr || "");
+  
+      console.log("텍스트 성공적으로 반영됨!");
     } catch (error) {
-      console.error("Error fetching text:", error);
+      console.error("텍스트 가져오는 중 오류 발생:", error);
     }
   };
+  
+  
 
   const fetchAllData = async () => {
     try {
@@ -137,6 +140,34 @@ function FinalPost() {
       console.error("Error fetching all data:", error);
     }
   };
+
+  const PostAudio = async (date) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/POST/audio/${date}`, {
+        method: "POST",
+      });
+  
+      console.log("Audio POST Response:", response.status, response.ok);
+  
+      if (!response.ok) {
+        throw new Error(`오디오 생성 실패: Status ${response.status}`);
+      }
+  
+      const result = await response.json();
+      console.log("POST Audio Result:", result);
+  
+      if (result.message === "success") {
+        console.log(`${date} 오디오 생성 완료!`);
+        alert("오디오가 성공적으로 생성되었습니다!");
+      } else {
+        throw new Error("서버에서 성공 메시지를 받지 못함");
+      }
+    } catch (error) {
+      console.error("Error posting audio:", error);
+      alert("오디오 생성 중 오류가 발생했습니다.");
+    }
+  };
+  
   
 
 
@@ -167,7 +198,6 @@ function FinalPost() {
           <img className="write" alt="Group" src={write} /> 
         </Link>
 
-        {/* 🔹 버튼 클릭 시 GET 요청 실행 */}
         <Link 
           to={{
             pathname: `/post/${format(dateObject, 'yyyy-MM-dd')}`,
@@ -177,7 +207,7 @@ function FinalPost() {
           <img className="photo" alt="Group" src={photo} />
       </Link>
         
-        <button onClick={fetchAudio}>
+        <button onClick={() => PostAudio(date)}>
           <img className="music" alt="Group" src={music} />
         </button>
           
