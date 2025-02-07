@@ -34,8 +34,13 @@ import check from "../assets/img/check.png";
 function Post({ 
   currentDate,
   text,
+  rawText,
+  summaryText,
+  tagGenInput,
+  handleTagGenTextChange,
   handleChange,
   handleSubmit,
+  handleGenerateAgain,
   formRef,
   handleCaptureAndSubmit
  }) {
@@ -65,6 +70,7 @@ function Post({
 
   const [submitted, setSubmitted] = useState(false);
 
+ 
   // PostSubmit 클릭시 그룹38 이미지를 보이도록 하고, 기존 handleSubmit 호출
   const handlePostSubmit = (e) => {
     e.preventDefault();
@@ -253,7 +259,7 @@ function Post({
               src={goy}
               style={{
                 position: "absolute",
-                left: "40.4vw",
+                left: "38.5vw",
                 top: "-4vh",
                 pointerEvents: "none",
                 zIndex: "100",
@@ -278,12 +284,12 @@ function Post({
       {/* showGroup38 상태가 true면 Group38 이미지 렌더링 */}
       {showGroup38 && (
         <div className="group38-container">
-          <img src={group38} alt="Group38" style={{position:"relative", left:"58vw", top:"80vh"}}/>
+          <img src={group38} alt="Group38" style={{position:"relative", left:"58vw", top:"80vh"}} onClick={handleGenerateAgain}/>
           <form ref={formRef} onSubmit={handlePostSubmit}>
             <img src={textsmall} style={{ width: "45vw" }} className="textsmall" />
             <textarea
-                  value={text}
-                  onChange={handleChange}
+                  value={tagGenInput}
+                  onChange={handleTagGenTextChange}
                   className="text-small"
                   placeholder="검색"
                 />

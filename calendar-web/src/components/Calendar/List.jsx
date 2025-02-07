@@ -25,7 +25,7 @@ function List() {
 
   return (
     <div className="sidebar">
-      <div style={{ position: "absolute", top: "-13vh" }}>
+      <div>
         <img src={group28} style={{ width: "7vw", height: "auto" }} />
       </div>
       {/* 로딩 상태 처리 */}

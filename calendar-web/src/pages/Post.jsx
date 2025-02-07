@@ -1,6 +1,6 @@
 //Post.jsx 페이지
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';  // 페이지 이동을 위해 추가
+import { useNavigate, useParams,useLocation } from 'react-router-dom';  // 페이지 이동을 위해 추가
 import { format } from "date-fns";
 import PostComponent from "../components/Post/post"; 
 import TagComponent from "../components/Post/Tag"; 
@@ -14,6 +14,8 @@ function Post() {
   const [dateObject, setDateObject] = useState(null);
   const [text, setText] = useState('');
   const [nouns, setNouns] = useState([]); 
+  const [rawText, setRawText] = useState("");
+  const [summaryText, setSummaryText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isPostSubmitted, setIsPostSubmitted] = useState(false);
   const [canvasImages, setCanvasImages] = useState([]); 
@@ -22,6 +24,7 @@ function Post() {
   
   const formRef = useRef(null); 
   const canvasRef = useRef(null);
+  const location = useLocation();
 
   const [draggingImageIndex, setDraggingImageIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -118,6 +121,36 @@ function Post() {
       setIsLoading(false);
     }
   };
+
+  // 모든 그림일기 데이터를 가져오는 GET 함수
+  const getAllDiaries = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://127.0.0.1:5000/GET/all");
+      if (response.ok) {
+        const data = await response.json();
+        
+        // ✅ URL의 날짜와 일치하는 데이터 찾기
+        const matchedDiary = data.all.find((entry) => entry.date === date);
+
+        if (matchedDiary) {
+          setRawText(matchedDiary.raw_text); // 해당 날짜의 raw_text 저장
+          setSummaryText(matchedDiary.summarized_text_kr); // 해당 날짜의 summarized_text_kr 저장
+        } else {
+          console.warn("해당 날짜의 데이터를 찾을 수 없습니다.");
+        }
+
+
+      } else {
+        console.error("데이터를 가져오지 못했습니다.");
+      }
+    } catch (error) {
+      console.error("데이터 가져오기 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
 
   const drawCanvas = () => {
     const canvas = canvasRef.current;
@@ -309,36 +342,12 @@ function Post() {
     }
   };
 
-  //뒤로 가기 시 기존 데이터 유지
-  useEffect(() => {
-    const savedText = sessionStorage.getItem(`textData-${date}`);
-    const savedNouns = sessionStorage.getItem(`nounsData-${date}`);
-   
-    if (savedText) {
-        setText(savedText);  // 저장된 텍스트가 있으면 상태를 업데이트
-    } else {
-        
-        setText("");  
-    }
-
-    if (savedNouns) {
-        setNouns(JSON.parse(savedNouns));  
-    } else {
-        setNouns([]);  
-    }
-}, []); 
-
-
 
   // POST 요청 후에만
   useEffect(() => {
     if (isPostSubmitted) {
       fetchNouns();
       setIsPostSubmitted(false); 
-    
-    // 세션에 날짜별로 데이터 저장
-    sessionStorage.setItem(`textData-${date}`, text);  // 날짜별로 textData 저장
-    sessionStorage.setItem(`nounsData-${date}`, JSON.stringify(nouns));  // 날짜별로 nounsData 저장
       
     }
   }, [isPostSubmitted]);
@@ -352,6 +361,10 @@ function Post() {
    }
  }, [date]);
  
+  useEffect(() => {
+    getAllDiaries();
+  }, [location.pathname]); // 경로가 바뀔 때마다 getAllDiaries 실행
+
 
   
 
@@ -361,6 +374,8 @@ function Post() {
       <PostComponent
         currentDate={date}
         text={text}
+        rawText={rawText}
+        summaryText={summaryText}
         handleChange={(e) => setText(e.target.value)}
         handleSubmit={handleSubmit}
         handleReset={handleReset}
