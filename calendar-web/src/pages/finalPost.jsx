@@ -102,10 +102,10 @@ function FinalPost() {
       }
   
       // 서버에서 받은 JSON 데이터를 그대로 사용
-      const { summarized_text_kr } = await response.json();
-      console.log("서버에서 받은 요약 텍스트:", summarized_text_kr);
+      const { raw_text } = await response.json();
+      console.log("서버에서 받은 요약 텍스트:", raw_text);
   
-      setText(summarized_text_kr || "");
+      setText(raw_text || "");
   
       console.log("텍스트 성공적으로 반영됨!");
     } catch (error) {
@@ -132,7 +132,7 @@ function FinalPost() {
       if (diaryData) {
         setImageUrl(diaryData.image);
         setAudioUrl(diaryData.audio);
-        setText(diaryData.summarized_text_kr || "");
+        setText(diaryData.raw_text || "");
       }
 
       console.log("Successfully fetched all data!");
