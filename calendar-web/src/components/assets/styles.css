@@ -881,6 +881,18 @@ html, body {
   box-sizing: border-box; /* 패딩 포함 계산 */
 }
 
+.raw-text{
+  position: absolute;
+  font-family: "나눔손글씨 힘내라는 말보단";
+  font-size: 43px;
+  width: 40vw;
+  left: 4.9vw;
+  top: 62vh;
+  font-weight: 600;
+  font-style: normal;
+  z-index:100;
+  line-height: 2; 
+}
 
 .svg-text {
   position: relative;

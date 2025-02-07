@@ -40,7 +40,7 @@ function List() {
             key={post.id} 
           >
             <ListPost
-              date={format(new Date(post.date), "yyyy-MM-dd")}
+              date={post.date}
               content={post.summarized_text_kr}
               image={post.image}
             />
