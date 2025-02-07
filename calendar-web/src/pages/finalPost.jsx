@@ -27,7 +27,7 @@ function FinalPost() {
   const { date } = useParams(); // // URL에서 'date' 파라미터 받아오기
   const [dateObject, setDateObject] = useState(null);
   const [isFirstVisit, setIsFirstVisit] = useState(true); // 첫 접근 여부를 확인
-
+  const [postGen, setPostGen] = useState(false); //오디오 재생성 
   
   useEffect(() => {
     if (date) {
@@ -35,7 +35,7 @@ function FinalPost() {
       setDateObject(dateObj);
       console.log('변환된 Date 객체:', dateObj);
 
-      // 첫 접근 시에는 개별적으로 데이터를 가져옴 (uf문 없애면 POST시 undefined 됨. 그래서 있어야한다.)
+      // 첫 접근 시에는 개별적으로 데이터를 가져옴 (if문 없애면 POST시 undefined 됨. 그래서 있어야한다.)
       if (isFirstVisit) {
         fetchImage();
         fetchAudio();
@@ -47,6 +47,15 @@ function FinalPost() {
       }
     }
   }, [date]);
+
+
+  useEffect(() => {
+    if (postGen) {
+      fetchAudio();
+      setPostGen(false); // 상태 리셋
+    }
+  }, [postGen]);
+
 
   const fetchImage = async () => {
     try {
@@ -153,11 +162,14 @@ function FinalPost() {
         throw new Error(`오디오 생성 실패: Status ${response.status}`);
       }
   
+
       const result = await response.json();
       console.log("POST Audio Result:", result);
-  
+      
+
       if (result.message === "success") {
         console.log(`${date} 오디오 생성 완료!`);
+        setPostGen(true);
         alert("오디오가 성공적으로 생성되었습니다!");
       } else {
         throw new Error("서버에서 성공 메시지를 받지 못함");
@@ -220,8 +232,8 @@ function FinalPost() {
               <source src={audioUrl} type="audio/wav" />
             
             </audio>
-          )}
-          <p>{text}</p> {/* 업데이트된 텍스트 표시 */}
+          )} <p>{text}</p> {/* 업데이트된 텍스트 표시 */}
+          <p className="diary-text">{text}</p> {/* 업데이트된 텍스트 표시 */} <p>{text}</p> {/* 업데이트된 텍스트 표시 */}
       
     </div>
 

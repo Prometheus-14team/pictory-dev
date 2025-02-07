@@ -146,7 +146,7 @@ function Post() {
         // 명사와 이미지 경로를 묶어주는 형식으로 변환
         const nounsWithImages = data.tag.map(([noun, ...imagePath]) => ({
           noun: noun,
-          images: imagePath,
+          images: imagePath.length > 0 ? imagePath : [],
         }));
         setNouns(nounsWithImages);  // 상태 업데이트
       } else {
@@ -408,6 +408,9 @@ function Post() {
   useEffect(() => {
     getAllDiaries();  
 
+    console.log("🔍 location.state:", location.state); 
+    console.log("🔍 isPhotoButtonClicked:", location.state?.isPhotoButtonClicked);
+  
     console.log(isPhotoButtonClicked)
 
      // Link에서 전달된 state가 있으면 isPhotoButtonClicked가 true일 때 fetchNouns()를 호출합니다.

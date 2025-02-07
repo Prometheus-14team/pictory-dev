@@ -9,6 +9,7 @@ function Tag({ nouns, onImagesSelected }) {
 
 
 
+
   return (
     <div className="tag-container">
       {nouns.map((nounData, index) => (
@@ -24,9 +25,10 @@ function Tag({ nouns, onImagesSelected }) {
             <TagActive className="tag" /> 
           )}
           <span className="noun-text">{nounData.noun}</span>
-          {hoveredNoun === nounData.noun && nounData.images.length > 0 && (
+          
+          {hoveredNoun === nounData.noun && nounData.images?.length > 0 && (
             <div className="image-dropdown">
-              {nounData.images.map((image, imgIndex) => (
+             {(nounData.images || []).map((image, imgIndex) => (
                 <img
                   key={imgIndex}
                   src={image} // 이미지 경로
