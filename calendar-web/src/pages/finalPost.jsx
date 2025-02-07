@@ -18,7 +18,7 @@ import  write  from "../components/assets/img/Group 53.png";
 import  music  from "../components/assets/img/Group 54.png";
 import  photo  from "../components/assets/img/Component 6.png";
 import { Link, useParams } from 'react-router-dom';
-
+import {ko} from 'date-fns/locale';
 
 function FinalPost() {
   const [imageUrl, setImageUrl] = useState(null);
@@ -141,7 +141,7 @@ function FinalPost() {
 
 
   return (
-    <div>
+    <div className="finalpost">
         <Link to="/calendar">
           <img className="postsmall" alt="Group" src={pictorysmall} />
         </Link>
@@ -159,9 +159,9 @@ function FinalPost() {
                   <img src={cloud} style={{ width: "2.5vw" }} />
                   <img src={Rain} style={{ width: "2.5vw" }} />
         </div>
-        <text className="di-text">
-          {format(dateObject, 'yyyy-MM-dd')}
-        </text>
+        <p className="di-text">
+          {format(dateObject, 'yyyy년 MM월 dd일 eeee', {locale: ko})}
+        </p>
         <img className="rectangle58" alt="Group" src={rectangle58} />
         <Link to={`/post/${format(dateObject, 'yyyy-MM-dd')}`}>
           <img className="write" alt="Group" src={write} /> 
