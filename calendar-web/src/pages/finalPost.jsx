@@ -168,9 +168,15 @@ function FinalPost() {
         </Link>
 
         {/* 🔹 버튼 클릭 시 GET 요청 실행 */}
-        <button onClick={fetchImage}>
+        <Link 
+          to={{
+            pathname: `/post/${format(dateObject, 'yyyy-MM-dd')}`,
+            state: { isPhotoButtonClicked: true } // state로 클릭 상태 전달
+          }}
+        >
           <img className="photo" alt="Group" src={photo} />
-        </button>
+      </Link>
+        
         <button onClick={fetchAudio}>
           <img className="music" alt="Group" src={music} />
         </button>

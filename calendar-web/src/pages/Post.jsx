@@ -21,6 +21,7 @@ function Post() {
   const [canvasImages, setCanvasImages] = useState([]); 
   const [imgPos, setImgPos] = useState([]); 
   const [imgSize, setImgSize] = useState([]); 
+  const [isPhotoButtonClicked, setIsPhotoButtonClicked] = useState(false);
   
   const formRef = useRef(null); 
   const canvasRef = useRef(null);
@@ -347,6 +348,7 @@ function Post() {
   useEffect(() => {
     if (isPostSubmitted) {
       fetchNouns();
+      getAllDiaries(); //POST 버튼 누르면 TEXT갱신
       setIsPostSubmitted(false); 
       
     }
@@ -361,10 +363,21 @@ function Post() {
    }
  }, [date]);
  
+  // Link에서 전달한 state를 받아오는 부분
   useEffect(() => {
-    getAllDiaries();
-  }, [location.pathname]); // 경로가 바뀔 때마다 getAllDiaries 실행
+    if (location.state && location.state.isPhotoButtonClicked) {
+      setIsPhotoButtonClicked(true);  // Link 클릭 시 상태 변경
+    }
+  }, [location.state]); // location.state가 변경될 때마다 실행
 
+  useEffect(() => {
+    getAllDiaries();  // 경로가 바뀔 때마다 getAllDiaries 실행
+
+    if (isPhotoButtonClicked) {
+      fetchNouns();  // fetchNouns 호출
+      setIsPhotoButtonClicked(false);  // 클릭 후 상태 초기화
+    }
+  }, [location.pathname, isPhotoButtonClicked]);  // location.pathname과 isPhotoButtonClicked가 변경될 때마다 실행
 
   
 
@@ -380,6 +393,7 @@ function Post() {
         handleSubmit={handleSubmit}
         handleReset={handleReset}
         formRef={formRef}
+      
         />
       
       {isLoading ? (

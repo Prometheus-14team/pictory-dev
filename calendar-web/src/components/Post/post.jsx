@@ -42,7 +42,7 @@ function Post({
   handleSubmit,
   handleGenerateAgain,
   formRef,
-  handleCaptureAndSubmit
+  handleCaptureAndSubmit,
  }) {
   // 기존의 face 및 weather 상태
   const [activeSmile, setActiveSmile] = useState(false);
@@ -80,6 +80,8 @@ function Post({
   };
   const formattedDate = format(new Date(currentDate), "yyyy년 M월 d일 eeee", { locale: ko });
 
+
+  
   return (
     <div className="container">
       <div className="back" 
