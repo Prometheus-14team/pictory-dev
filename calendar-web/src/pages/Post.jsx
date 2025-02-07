@@ -430,7 +430,7 @@ function Post() {
         summaryText={summaryText}
         tagGenInput = {tagGenInput}
         handleChange={(e) => setText(e.target.value)}
-        handleTagGenTextChange={(e) => setText(e.target.value)}
+        handleTagGenTextChange={(e) => setTagGenInput(e.target.value)}
         handleSubmit={handleSubmit}
         handleGenerateAgain={TagSearch}
         formRef={formRef}
