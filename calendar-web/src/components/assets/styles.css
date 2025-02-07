@@ -1,3 +1,4 @@
+
 html, body {
   height: 100%;
   margin: 0;
@@ -621,7 +622,7 @@ font-family: 'Poppins';
   margin-left: 62vw;
   max-height: 80vh;
   overflow-y: auto;
-  /* overflow-x: hidden; */
+  overflow-x: hidden;
 }
 
 .image-list {
@@ -645,8 +646,8 @@ font-family: 'Poppins';
   font-size: 34px;
   font-style: bold;
   font-weight: 600;
-  left: 6vw;
-  top: 4vh;
+  left: 5vw;
+  top: 3.5vh;
 }
 
 .sidebar .text-wrapper {
@@ -662,13 +663,13 @@ font-family: 'Poppins';
 
 .sidebar .div {
   color: #000000;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
-  left: 122px;
+  left: 5vw;
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 5vw;
+  top: 3.5vw;
 }
 
 .sidebar .ellipse {
@@ -692,12 +693,17 @@ font-family: 'Poppins';
 
 
 .sidebar .image {
-  height: 146px;
   left: 53px;
   position: absolute;
   top: 16px;
   width: 65px;
 }
+
+.post-image{
+  width: 164px;
+  height: 164px;
+}
+
 
 /* .sidebar .overlap-wrapper {
   height: 207px;
@@ -843,15 +849,15 @@ html, body {
   font-size: 22px;
   font-style: bold;
   font-family: Pretendard;
-  z-index: 10;
+  z-index: 100;
 }
 
 .text-small {
   all: unset;
   position: relative;
-  left: 31vw;
+  left: 33vw;
   top: 84vh;
-  font-size: 22px;
+  font-size: 24px;
   font-style: bold;
   font-family: Pretendard;
   z-index: 10;
@@ -862,6 +868,7 @@ html, body {
   left: 19vw;
   top: -6vh;
 }
+
 
 .textsmall{
   position: absolute;
@@ -1037,33 +1044,47 @@ html, body {
 
 .rectangle58 {
   position: relative;
-  margin-left: 17vw;
-  top: -93vh;
+  margin-left: 32vw;
+  top: -140vh;
   z-index: 100;
 }
 
 .write{
   position: relative;
-  margin-left: 87.8vw;
-  top: -113vh;
+  margin-left: 87.9vw;
+  top: -160vh;
   z-index: 110;
 }
 
 .photo{
   position: relative;
-  margin-left: 87.7vw;
-  top: -112vh;
+  margin-left: 87.9vw;
+  top: -158.5vh;
   z-index: 110;
 }
 
 .music{
   position: relative;
   margin-left: 87.7vw;
-  top: -111vh;
+  top: -157.5vh;
   z-index: 110;
 }
 
 .diaryImage{
-  margin-top: 2vh;
-  z-index: 100;
+  position: relative;
+  left: 23vw;
+  top : -114vh;
+  width: 55vw;
+}
+
+.diary-text{
+  position: relative;
+  left: 18vw;
+  top : -133vh;
+  width: 65vw;
+  font-size: 56px;
+  font-family: "나눔손글씨 힘내라는 말보단";
+  font-weight: 600;
+  z-index: 999;
+  line-height: 1.8; 
 }

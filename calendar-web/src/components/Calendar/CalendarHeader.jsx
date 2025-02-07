@@ -59,7 +59,7 @@ function CalendarHeader({ currentDate, onNext, onPrev }) {
               src={vector}
               style={{
                 position: "absolute",
-                right: "1vw",
+                right: "0.1vw",
                 width: "3vw",
                 top: "4vw",
                 pointerEvents: "none",

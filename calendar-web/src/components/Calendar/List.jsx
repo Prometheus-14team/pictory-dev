@@ -28,6 +28,7 @@ function List() {
       <div>
         <img src={group28} style={{ width: "7vw", height: "auto" }} />
       </div>
+      <div style={{marginTop:"6vh"}}>
       {/* 로딩 상태 처리 */}
       {isLoading ? (
         <p>Loading...</p>
@@ -38,6 +39,7 @@ function List() {
           <Link
             to={`/finalpost/${format(new Date(post.date), 'yyyy-MM-dd')}`} 
             key={post.id} 
+            style={{ textDecoration: "none", color: "inherit" }}
           >
             <ListPost
               date={post.date}
@@ -49,7 +51,7 @@ function List() {
         ) : (
           <p>No posts available</p>
         )
-      )}
+      )}</div>
     </div>
   );
 }
