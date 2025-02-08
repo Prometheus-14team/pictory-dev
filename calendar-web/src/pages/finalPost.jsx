@@ -211,10 +211,8 @@ function FinalPost() {
         </Link>
 
         <Link 
-          to={{
-            pathname: `/post/${format(dateObject, 'yyyy-MM-dd')}`,
-            state: { isPhotoButtonClicked: true } // state로 클릭 상태 전달
-          }}
+          to={`/post/${format(dateObject, 'yyyy-MM-dd')}`} 
+          state={{ isPhotoButtonClicked: true }} // ✅ state를 별도로 전달
         >
           <img className="photo" alt="Group" src={photo} />
       </Link>
