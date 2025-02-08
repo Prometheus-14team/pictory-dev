@@ -647,7 +647,7 @@ font-family: 'Poppins';
   font-style: bold;
   font-weight: 600;
   left: 5vw;
-  top: 3.5vh;
+  top: 3vh;
 }
 
 .sidebar .text-wrapper {
@@ -669,7 +669,7 @@ font-family: 'Poppins';
   letter-spacing: 0;
   line-height: normal;
   position: absolute;
-  top: 3.5vw;
+  top: 2.6vw;
   max-width: 18vw;
 }
 
@@ -892,14 +892,14 @@ html, body {
 .raw-text{
   position: absolute;
   font-family: "나눔손글씨 힘내라는 말보단";
-  font-size: 43px;
-  width: 40vw;
+  font-size: 40px;
+  width: 38vw;
   left: 4.9vw;
-  top: 62vh;
+  top: 60vh;
   font-weight: 600;
   font-style: normal;
   z-index:100;
-  line-height: 2; 
+  line-height: 2.2; 
 }
 
 .svg-text {
